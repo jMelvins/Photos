@@ -10,7 +10,6 @@ import UIKit
 
 class InitialViewController: UIViewController {
     
-    
     enum TabIndex : Int {
         case firstChildTab = 0
         case secondChildTab = 1
