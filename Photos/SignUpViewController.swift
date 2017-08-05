@@ -41,6 +41,7 @@ class SignUpViewController: UIViewController, NetworkingStuffDelegate{
         }
         
         networkingStuff.authorization(url: signURL, userName: loginTextField.text!, userPassword: passwordTextField.text!)
+        self.dismiss(animated: true, completion: nil)
     }
 
     func isDataCorrect() -> Bool{

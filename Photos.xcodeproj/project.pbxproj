@@ -18,6 +18,10 @@
 		A04E5C681F364058006CA19D /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C671F364058006CA19D /* SignUpViewController.swift */; };
 		A04E5C6A1F3647EF006CA19D /* NetworkingStuff.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C691F3647EF006CA19D /* NetworkingStuff.swift */; };
 		A04E5C6C1F364822006CA19D /* UserStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C6B1F364822006CA19D /* UserStruct.swift */; };
+		A04E5C781F366A57006CA19D /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C771F366A57006CA19D /* SWRevealViewController.m */; };
+		A04E5C821F366FE5006CA19D /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C811F366FE5006CA19D /* MenuViewController.swift */; };
+		A04E5C841F3670DD006CA19D /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C831F3670DD006CA19D /* PhotosCollectionViewController.swift */; };
+		A04E5C861F36727C006CA19D /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C851F36727C006CA19D /* PhotosCollectionViewCell.swift */; };
 		F07FA49FCA700186AF58ECA3 /* Pods_Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC9BF56AB180C8706B1FA9D /* Pods_Photos.framework */; };
 /* End PBXBuildFile section */
 
@@ -38,6 +42,12 @@
 		A04E5C671F364058006CA19D /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		A04E5C691F3647EF006CA19D /* NetworkingStuff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkingStuff.swift; sourceTree = "<group>"; };
 		A04E5C6B1F364822006CA19D /* UserStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStruct.swift; sourceTree = "<group>"; };
+		A04E5C761F366A57006CA19D /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		A04E5C771F366A57006CA19D /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		A04E5C7B1F366A96006CA19D /* Photos-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Photos-Bridging-Header.h"; path = "../../Photos-Bridging-Header.h"; sourceTree = "<group>"; };
+		A04E5C811F366FE5006CA19D /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		A04E5C831F3670DD006CA19D /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
+		A04E5C851F36727C006CA19D /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,20 +91,50 @@
 		A04E5C491F363142006CA19D /* Photos */ = {
 			isa = PBXGroup;
 			children = (
+				A04E5C7C1F366C5C006CA19D /* Authorization */,
 				A04E5C4A1F363142006CA19D /* AppDelegate.swift */,
-				A04E5C4C1F363142006CA19D /* InitialViewController.swift */,
-				A04E5C631F363F3C006CA19D /* TabySegmentControll.swift */,
-				A04E5C651F364050006CA19D /* SignInViewController.swift */,
-				A04E5C671F364058006CA19D /* SignUpViewController.swift */,
+				A04E5C831F3670DD006CA19D /* PhotosCollectionViewController.swift */,
+				A04E5C851F36727C006CA19D /* PhotosCollectionViewCell.swift */,
+				A04E5C811F366FE5006CA19D /* MenuViewController.swift */,
 				A04E5C4E1F363142006CA19D /* Main.storyboard */,
 				A04E5C541F363142006CA19D /* Assets.xcassets */,
 				A04E5C561F363142006CA19D /* LaunchScreen.storyboard */,
 				A04E5C591F363142006CA19D /* Info.plist */,
+				A04E5C871F3676E1006CA19D /* Model */,
+				A04E5C751F366A57006CA19D /* SWRevealViewController */,
+			);
+			path = Photos;
+			sourceTree = "<group>";
+		};
+		A04E5C751F366A57006CA19D /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A04E5C7B1F366A96006CA19D /* Photos-Bridging-Header.h */,
+				A04E5C761F366A57006CA19D /* SWRevealViewController.h */,
+				A04E5C771F366A57006CA19D /* SWRevealViewController.m */,
+			);
+			path = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		A04E5C7C1F366C5C006CA19D /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				A04E5C4C1F363142006CA19D /* InitialViewController.swift */,
+				A04E5C631F363F3C006CA19D /* TabySegmentControll.swift */,
+				A04E5C651F364050006CA19D /* SignInViewController.swift */,
+				A04E5C671F364058006CA19D /* SignUpViewController.swift */,
+			);
+			name = Authorization;
+			sourceTree = "<group>";
+		};
+		A04E5C871F3676E1006CA19D /* Model */ = {
+			isa = PBXGroup;
+			children = (
 				A04E5C511F363142006CA19D /* Photos.xcdatamodeld */,
 				A04E5C691F3647EF006CA19D /* NetworkingStuff.swift */,
 				A04E5C6B1F364822006CA19D /* UserStruct.swift */,
 			);
-			path = Photos;
+			name = Model;
 			sourceTree = "<group>";
 		};
 		BEFD3409066E29AD83579FDE /* Pods */ = {
@@ -232,8 +272,12 @@
 				A04E5C6A1F3647EF006CA19D /* NetworkingStuff.swift in Sources */,
 				A04E5C681F364058006CA19D /* SignUpViewController.swift in Sources */,
 				A04E5C641F363F3C006CA19D /* TabySegmentControll.swift in Sources */,
+				A04E5C841F3670DD006CA19D /* PhotosCollectionViewController.swift in Sources */,
 				A04E5C531F363142006CA19D /* Photos.xcdatamodeld in Sources */,
+				A04E5C861F36727C006CA19D /* PhotosCollectionViewCell.swift in Sources */,
+				A04E5C821F366FE5006CA19D /* MenuViewController.swift in Sources */,
 				A04E5C4D1F363142006CA19D /* InitialViewController.swift in Sources */,
+				A04E5C781F366A57006CA19D /* SWRevealViewController.m in Sources */,
 				A04E5C661F364050006CA19D /* SignInViewController.swift in Sources */,
 				A04E5C4B1F363142006CA19D /* AppDelegate.swift in Sources */,
 				A04E5C6C1F364822006CA19D /* UserStruct.swift in Sources */,
@@ -359,11 +403,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0F986FDC28C85C3E06C68039 /* Pods-Photos.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Photos/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = VladShilov.Photos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Photos-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -372,11 +418,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8022BCEFA9D9E8EED1E41611 /* Pods-Photos.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Photos/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = VladShilov.Photos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Photos-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
