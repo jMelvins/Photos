@@ -13,16 +13,27 @@ private let reuseIdentifier = "cell"
 class PhotosCollectionViewController: UICollectionViewController {
 
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
-    let images = ["Map Marker Filled","Map Marker","Stack of Photos","Stack of Photos Filled",
-                  "Map Marker Filled","Map Marker","Stack of Photos","Stack of Photos Filled",
-                  "Map Marker Filled","Map Marker","Stack of Photos","Stack of Photos Filled",
-                  "Map Marker Filled","Map Marker","Stack of Photos","Stack of Photos Filled"]
+    var images = ["Map Marker Filled","Stack of Photos"]
+    
+    var mainUser: User! {
+        didSet{
+            self.update()
+        }
+    }
+    
+    func update(){
+        images.append("Map Marker")
+        images.append("Stack of Photos Filled")
+        images.append("Stack of Photos Filled")
+        collectionView?.reloadData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: "ModalVC")
-        self.show(vc as! UIViewController, sender: vc)
+        
+//        let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: "ModalVC")
+//        self.present(vc as! UIViewController, animated: true, completion: nil)
+        //self.show(vc as! UIViewController, sender: vc)
 
         if self.revealViewController() != nil {
             menuBarButton.target = self.revealViewController()
@@ -30,21 +41,16 @@ class PhotosCollectionViewController: UICollectionViewController {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        let isUserLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
+        
+        if !isUserLoggedIn{
+            self.performSegue(withIdentifier: "Auth", sender: self)
+        }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
 
     // MARK: UICollectionViewDataSource
 
@@ -59,6 +65,10 @@ class PhotosCollectionViewController: UICollectionViewController {
         cell.imageView.image = UIImage(named: images[indexPath.row])
     
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(mainUser)
     }
 
     // MARK: UICollectionViewDelegate

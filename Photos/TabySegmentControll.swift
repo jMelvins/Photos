@@ -21,9 +21,13 @@ class TabySegmentedControl: UISegmentedControl {
     }
     
     func setupBackground(){
-        let backgroundImage = UIImage(named: "segmented_unselected_bg")
-        let dividerImage = UIImage(named: "segmented_separator_bg")
-        let backgroundImageSelected = UIImage(named: "segmented_selected_bg")
+//        let backgroundImage = UIImage(named: "segmented_unselected_bg")
+//        let dividerImage = UIImage(named: "segmented_separator_bg")
+//        let backgroundImageSelected = UIImage(named: "segmented_selected_bg")
+        
+        let backgroundImage = UIImage(named: "filledSegment")
+        let dividerImage = UIImage(named: "separator")
+        let backgroundImageSelected = UIImage(named: "leftSegment")
         
         self.setBackgroundImage(backgroundImage, for: UIControlState(), barMetrics: .default)
         self.setBackgroundImage(backgroundImageSelected, for: .highlighted, barMetrics: .default)
@@ -39,7 +43,7 @@ class TabySegmentedControl: UISegmentedControl {
         
         
         let normalTextAttributes = [
-            NSForegroundColorAttributeName: UIColor.black,
+            NSForegroundColorAttributeName: UIColor.init(red: 93/255, green: 208/255, blue: 192/255, alpha: 1),
             NSFontAttributeName: font
         ]
         

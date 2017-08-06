@@ -10,6 +10,18 @@ import UIKit
 
 class MenuViewController: UITableViewController {
 
+    @IBOutlet weak var menuLabel: UILabel!
+    
+    var userName: String? {
+        didSet{
+            update()
+        }
+    }
+    
+    func update(){
+        menuLabel.text = userName
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -19,6 +31,20 @@ class MenuViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        let isUserLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
+        
+        if isUserLoggedIn{
+            userName = UserDefaults.standard.value(forKey: "userLogin") as? String
+        }
+    }
 
+    @IBAction func logoutBtn(_ sender: UIButton) {
+        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+        UserDefaults.standard.synchronize()        
+    }
 
 }

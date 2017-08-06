@@ -43,9 +43,6 @@ class NetworkingStuff {
         let login = readableJSON["data"]?["login"]! as! String
         let userId = readableJSON["data"]?["userId"]! as! Int
         let token = readableJSON["data"]?["token"]! as! String
-        print(login)
-        print(userId)
-        print(token)
         self.delegate.didGetUser(User(login: login, userId: userId, token: token))
     }
 

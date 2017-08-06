@@ -26,6 +26,16 @@ class SignInViewController: UIViewController, NetworkingStuffDelegate{
     
     func didGetUser(_ user: User) {
         statusLabel.text = "You are succesfully signed in!\nYour token: \(user.token!)"
+        
+        print(user.login!)
+        print(user.userId!)
+        print(user.token!)
+        
+        if let presenter = self.presentingViewController as? PhotosCollectionViewController {
+            presenter.mainUser = user
+        }
+        
+        self.dismiss(animated: true, completion: nil)
     }
     
     func didGetError(errorNumber: Int, errorDiscription: String) {
@@ -37,7 +47,7 @@ class SignInViewController: UIViewController, NetworkingStuffDelegate{
             return
         }
         networkingStuff.authorization(url: signURL, userName: loginTextField.text!, userPassword: passwordTextField.text!)
-        self.dismiss(animated: true, completion: nil)
+        
     }
     
     func isDataCorrect() -> Bool{

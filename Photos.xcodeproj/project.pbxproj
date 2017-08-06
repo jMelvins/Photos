@@ -22,6 +22,7 @@
 		A04E5C821F366FE5006CA19D /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C811F366FE5006CA19D /* MenuViewController.swift */; };
 		A04E5C841F3670DD006CA19D /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C831F3670DD006CA19D /* PhotosCollectionViewController.swift */; };
 		A04E5C861F36727C006CA19D /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C851F36727C006CA19D /* PhotosCollectionViewCell.swift */; };
+		A04E5CAC1F37A093006CA19D /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CAB1F37A093006CA19D /* AuthorizationViewController.swift */; };
 		F07FA49FCA700186AF58ECA3 /* Pods_Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC9BF56AB180C8706B1FA9D /* Pods_Photos.framework */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +49,7 @@
 		A04E5C811F366FE5006CA19D /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		A04E5C831F3670DD006CA19D /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
 		A04E5C851F36727C006CA19D /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
+		A04E5CAB1F37A093006CA19D /* AuthorizationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,8 +93,9 @@
 		A04E5C491F363142006CA19D /* Photos */ = {
 			isa = PBXGroup;
 			children = (
-				A04E5C7C1F366C5C006CA19D /* Authorization */,
+				A04E5C7C1F366C5C006CA19D /* Auth */,
 				A04E5C4A1F363142006CA19D /* AppDelegate.swift */,
+				A04E5CAA1F37A077006CA19D /* Authorization */,
 				A04E5C831F3670DD006CA19D /* PhotosCollectionViewController.swift */,
 				A04E5C851F36727C006CA19D /* PhotosCollectionViewCell.swift */,
 				A04E5C811F366FE5006CA19D /* MenuViewController.swift */,
@@ -116,7 +119,7 @@
 			path = SWRevealViewController;
 			sourceTree = "<group>";
 		};
-		A04E5C7C1F366C5C006CA19D /* Authorization */ = {
+		A04E5C7C1F366C5C006CA19D /* Auth */ = {
 			isa = PBXGroup;
 			children = (
 				A04E5C4C1F363142006CA19D /* InitialViewController.swift */,
@@ -124,7 +127,7 @@
 				A04E5C651F364050006CA19D /* SignInViewController.swift */,
 				A04E5C671F364058006CA19D /* SignUpViewController.swift */,
 			);
-			name = Authorization;
+			name = Auth;
 			sourceTree = "<group>";
 		};
 		A04E5C871F3676E1006CA19D /* Model */ = {
@@ -135,6 +138,14 @@
 				A04E5C6B1F364822006CA19D /* UserStruct.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		A04E5CAA1F37A077006CA19D /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				A04E5CAB1F37A093006CA19D /* AuthorizationViewController.swift */,
+			);
+			name = Authorization;
 			sourceTree = "<group>";
 		};
 		BEFD3409066E29AD83579FDE /* Pods */ = {
@@ -274,6 +285,7 @@
 				A04E5C641F363F3C006CA19D /* TabySegmentControll.swift in Sources */,
 				A04E5C841F3670DD006CA19D /* PhotosCollectionViewController.swift in Sources */,
 				A04E5C531F363142006CA19D /* Photos.xcdatamodeld in Sources */,
+				A04E5CAC1F37A093006CA19D /* AuthorizationViewController.swift in Sources */,
 				A04E5C861F36727C006CA19D /* PhotosCollectionViewCell.swift in Sources */,
 				A04E5C821F366FE5006CA19D /* MenuViewController.swift in Sources */,
 				A04E5C4D1F363142006CA19D /* InitialViewController.swift in Sources */,
