@@ -26,6 +26,27 @@ class ImageGetter {
     
     typealias JSONStandart = [String : AnyObject]
     
+    //MARK: Upload Image
+    
+    func uploadImage(imageURL: String, token: String, date: Int, lat: Float, lng: Float, imageData: Data)  {
+       
+        let base64Image = imageData.base64EncodedString()
+        
+        let headers : HTTPHeaders = [
+            "Accept" : "application/json;charset=UTF-8",
+            "Access-Token" : token
+        ]
+        
+        let parameters: Parameters = [
+            "base64Image": base64Image,
+            "date": date,
+            "lat": lat,
+            "lng": lng
+        ]
+        
+        alamofireRequest(url: imageURL, parameters: parameters, headers: headers, method: .post, encoding: JSONEncoding(options: []))
+    }
+    
     //MARK: Download image
     
     func downloadImage(imageURL: String){
@@ -38,9 +59,7 @@ class ImageGetter {
                 print("Image Data: \(data)")
                 self.delegate.didGetImage(image: data)
             }
-            
         }
-        
     }
     
     //MARK : Get Image JSON
@@ -96,6 +115,11 @@ class ImageGetter {
                     let errorNumber = readableJSON?["status"] as! Int
                     let errorDiscription = readableJSON?["error"] as! String
                     self.delegate.didGetError(errorNumber: errorNumber, errorDiscription: errorDiscription)
+                    return
+                }
+                
+                //Т.к если мы постим, нам не нужно снова загружать картинку
+                guard method != HTTPMethod.post else{
                     return
                 }
                 

@@ -23,6 +23,7 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     
     var image: UIImage?
     let locationManager = CLLocationManager()
+    var location: CLLocation? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,6 +116,9 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
         let newLocation = locations.last
         
         print("Loction: \(newLocation?.coordinate)")
+        location = newLocation
+        
+        print("lat :\((location?.coordinate.latitude)!)")
         
         locationManager.stopUpdatingLocation()
         
@@ -247,14 +251,18 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate {
                                didFinishPickingMediaWithInfo info: [String : Any]) {
         //Если брать картинку без редактирвоания
         //image = info[UIImagePickerControllerOriginalImage] as? UIImage
-        //? вместо ! потомучто image -- optional instance variable.
         image = info[UIImagePickerControllerEditedImage] as? UIImage
         
         //т.к. image - опцоиональный тип
         if let theImage = image {
+            
+            let date = (location?.timestamp)!.timeIntervalSince1970
+            imageGetter.uploadImage(imageURL: imageURL, token: mainUser.token!, date: Int(date), lat: Float((location?.coordinate.latitude)!), lng: Float((location?.coordinate.longitude)!), imageData: UIImagePNGRepresentation(theImage)!)
+            
             images.append(UIImagePNGRepresentation(theImage)!)
             self.collectionView?.reloadData()
         }
+        
         
         
         dismiss(animated: true, completion: nil)
