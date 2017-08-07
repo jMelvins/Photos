@@ -6,6 +6,8 @@
 //  Copyright © 2017 Vladislav Shilov. All rights reserved.
 //
 
+//UILongPressGestureRecognizer
+
 import UIKit
 import CoreLocation
 
@@ -25,6 +27,8 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     let locationManager = CLLocationManager()
     var location: CLLocation? = nil
     
+    var indexPathToDelete: IndexPath?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageGetter = ImageGetter(delegate: self)
@@ -35,9 +39,12 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
     }
-    
+        
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
+        let longTab = UILongPressGestureRecognizer(target: self, action: #selector(PhotosCollectionViewController.deleteAction(gestureReconizer:)))
+        self.collectionView?.addGestureRecognizer(longTab)
 
         let isUserLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
         
@@ -55,7 +62,36 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
         }
     }
     
+    // MARK: DeleteImage
+    
+    func deleteAction(gestureReconizer: UILongPressGestureRecognizer){
+        
+        let point = gestureReconizer.location(in: self.collectionView)
+        let indexPath = self.collectionView?.indexPathForItem(at: point)
+        let id = imageStruct[(indexPath?.row)!].id
+        indexPathToDelete = indexPath
+        
+        let myAlert = UIAlertController(title: "Delete image.", message: "Do you want to delete this image?", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let okAction = UIAlertAction(title: "Delete", style: .default) { (UIAlertAction) in
+            self.imageGetter.deleteImage(imageURL: self.imageURL, token: self.mainUser.token!, id: id)
+        }
+        
+        myAlert.addAction(okAction)
+        myAlert.addAction(cancelAction)
+        
+        self.present(myAlert, animated: true, completion: nil)
+    }
+    
     // MARK: ImageGetterDelegate
+    
+    func didDeleteImage() {
+        images.remove(at: (indexPathToDelete?.row)!)
+        
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
+    }
     
     func didGetImage(image: Data) {
         images.append(image)
@@ -256,8 +292,17 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         //т.к. image - опцоиональный тип
         if let theImage = image {
             
-            let date = (location?.timestamp)!.timeIntervalSince1970
-            imageGetter.uploadImage(imageURL: imageURL, token: mainUser.token!, date: Int(date), lat: Float((location?.coordinate.latitude)!), lng: Float((location?.coordinate.longitude)!), imageData: UIImagePNGRepresentation(theImage)!)
+            var date = 100000
+            var lat = 0.1
+            var lng = 0.1
+            
+            if let location = location{
+                date = Int((location.timestamp).timeIntervalSince1970)
+                lat = (location.coordinate.latitude)
+                lng = (location.coordinate.longitude)
+            }
+            
+            imageGetter.uploadImage(imageURL: imageURL, token: mainUser.token!, date: date, lat: Float(lat), lng: Float(lng), imageData: UIImagePNGRepresentation(theImage)!)
             
             images.append(UIImagePNGRepresentation(theImage)!)
             self.collectionView?.reloadData()

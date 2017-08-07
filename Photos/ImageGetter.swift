@@ -13,6 +13,7 @@ protocol ImageGetterDelegate {
     func didGetImageData(imageData: [ImageStruct])
     func didGetError(errorNumber: Int, errorDiscription: String)
     func didGetImage(image: Data)
+    func didDeleteImage()
 }
 
 
@@ -25,6 +26,25 @@ class ImageGetter {
     }
     
     typealias JSONStandart = [String : AnyObject]
+    
+    //MARK: Delete Image
+    
+    func deleteImage(imageURL: String, token: String, id: Int) {
+        
+        let headers : HTTPHeaders = [
+            "Accept" : "*/*",
+            "Access-Token" : token
+        ]
+        
+        let parameters: Parameters = [
+            "id": id,
+            "Access-Token": token
+        ]
+
+        let deleteURL = imageURL + "/\(id)"
+        
+        alamofireRequest(url: deleteURL, parameters: parameters, headers: headers, method: .delete, encoding: URLEncoding.default)
+    }
     
     //MARK: Upload Image
     
@@ -120,6 +140,11 @@ class ImageGetter {
                 
                 //Т.к если мы постим, нам не нужно снова загружать картинку
                 guard method != HTTPMethod.post else{
+                    return
+                }
+                
+                guard method != HTTPMethod.delete else{
+                    self.delegate.didDeleteImage()
                     return
                 }
                 
