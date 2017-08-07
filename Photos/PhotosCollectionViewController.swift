@@ -44,7 +44,10 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
             mainUser.userId = UserDefaults.standard.value(forKey: "userId") as? Int
             mainUser.token = UserDefaults.standard.value(forKey: "userToken") as? String
             
-            imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
+            //Исправить на адекватную проверку
+            if images.isEmpty{
+                 imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
+            }
         }
     }
     
@@ -59,8 +62,6 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     }
     
     func didGetImageData(imageData: [ImageStruct]) {
-        displayMyAlertMessage(title: "Succes", message: "Data is succesfully parsed.", called: self)
-        
         imageStruct = imageData
         
         for imageItem in imageStruct{
@@ -70,6 +71,11 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     
     func didGetError(errorNumber: Int, errorDiscription: String) {
         displayMyAlertMessage(title: "Ooops", message: "It's an error \(errorNumber) : \(errorDiscription)", called: self)
+    }
+    
+    // MARK: IBActions
+    
+    @IBAction func addButton(_ sender: UIBarButtonItem) {
     }
     
     // MARK: UICollectionViewDataSource
@@ -88,6 +94,15 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(mainUser.login)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "detailImageVC" {
+            if let indexPath = collectionView?.indexPath(for: sender as! PhotosCollectionViewCell){
+                let newVC = segue.destination as! DetailPhotoViewController
+                newVC.imageData = images[indexPath.row]
+            }
+        }
     }
 
     // MARK: UICollectionViewDelegate

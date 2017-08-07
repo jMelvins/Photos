@@ -62,6 +62,7 @@
                                 </view>
                                 <connections>
                                     <outlet property="imageView" destination="6Vn-33-NST" id="TU4-iH-Scz"/>
+                                    <segue destination="wQL-J1-emW" kind="show" identifier="detailImageVC" id="ZSQ-gF-UZh"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -72,6 +73,11 @@
                     </collectionView>
                     <navigationItem key="navigationItem" title="Photos" id="y1G-sT-8A0">
                         <barButtonItem key="leftBarButtonItem" title="Item" id="8aR-Rb-x3i"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="oMr-bn-2Lc">
+                            <connections>
+                                <action selector="addButton:" destination="o5K-ik-ypb" id="dWl-fu-iLs"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="menuBarButton" destination="8aR-Rb-x3i" id="5Qs-0w-J5J"/>
@@ -81,6 +87,33 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KHs-kd-88c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="753.75" y="655.9859154929577"/>
+        </scene>
+        <!--Detail Photo View Controller-->
+        <scene sceneID="Vv0-6Y-cUG">
+            <objects>
+                <viewController id="wQL-J1-emW" customClass="DetailPhotoViewController" customModule="Photos" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ilb-eW-tgE"/>
+                        <viewControllerLayoutGuide type="bottom" id="KHT-i0-moi"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="QQd-oc-17Q">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DdY-uz-zCi">
+                                <rect key="frame" x="0.0" y="64" width="320" height="320"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="DdY-uz-zCi" id="EgE-Hc-mWw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Hks-3E-vUv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1820.625" y="655.9859154929577"/>
         </scene>
         <!--Menu View Controller-->
         <scene sceneID="8vB-2G-v6K">
@@ -114,7 +147,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Menu" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="5jp-ZW-GD6">
-                                                    <rect key="frame" x="8" y="60" width="133" height="72"/>
+                                                    <rect key="frame" x="7" y="57" width="131" height="73"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" weight="ultraLight" pointSize="50"/>
                                                     <nil key="textColor"/>

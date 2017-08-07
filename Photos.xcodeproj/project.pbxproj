@@ -23,6 +23,7 @@
 		A04E5CB21F37D7E2006CA19D /* ImageStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CB11F37D7E2006CA19D /* ImageStruct.swift */; };
 		A04E5CB41F37E48B006CA19D /* ImageGetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CB31F37E48B006CA19D /* ImageGetter.swift */; };
 		A04E5CB61F37E5E0006CA19D /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CB51F37E5E0006CA19D /* Functions.swift */; };
+		A04E5CB81F37F9E9006CA19D /* DetailPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CB71F37F9E9006CA19D /* DetailPhotoViewController.swift */; };
 		F07FA49FCA700186AF58ECA3 /* Pods_Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC9BF56AB180C8706B1FA9D /* Pods_Photos.framework */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,7 @@
 		A04E5CB11F37D7E2006CA19D /* ImageStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageStruct.swift; sourceTree = "<group>"; };
 		A04E5CB31F37E48B006CA19D /* ImageGetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageGetter.swift; sourceTree = "<group>"; };
 		A04E5CB51F37E5E0006CA19D /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		A04E5CB71F37F9E9006CA19D /* DetailPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailPhotoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 				A04E5CAA1F37A077006CA19D /* Authorization */,
 				A04E5C831F3670DD006CA19D /* PhotosCollectionViewController.swift */,
 				A04E5C851F36727C006CA19D /* PhotosCollectionViewCell.swift */,
+				A04E5CB71F37F9E9006CA19D /* DetailPhotoViewController.swift */,
 				A04E5C811F366FE5006CA19D /* MenuViewController.swift */,
 				A04E5C4E1F363142006CA19D /* Main.storyboard */,
 				A04E5C541F363142006CA19D /* Assets.xcassets */,
@@ -282,6 +285,7 @@
 				A04E5C821F366FE5006CA19D /* MenuViewController.swift in Sources */,
 				A04E5CB21F37D7E2006CA19D /* ImageStruct.swift in Sources */,
 				A04E5C781F366A57006CA19D /* SWRevealViewController.m in Sources */,
+				A04E5CB81F37F9E9006CA19D /* DetailPhotoViewController.swift in Sources */,
 				A04E5C4B1F363142006CA19D /* AppDelegate.swift in Sources */,
 				A04E5CB41F37E48B006CA19D /* ImageGetter.swift in Sources */,
 				A04E5C6C1F364822006CA19D /* UserStruct.swift in Sources */,
