@@ -51,11 +51,11 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
     func signIn(){
         
         if (loginTextField.text?.characters.count)! <= 3 {
-            displayMyAlertMessage(message: "Login size must be between 4 and 32")
+            displayMyAlertMessage(title: "Your attention!", message: "Login size must be between 4 and 32", called: self)
             return 
         }
         if (passwordTextField.text?.characters.count)! <= 7 {
-            displayMyAlertMessage(message: "Password size must be between 8 and 500")
+            displayMyAlertMessage(title: "Your attention!", message: "Password size must be between 8 and 500", called: self)
             return
         }
         statusLabel.text = "SignIn"
@@ -66,15 +66,15 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
     func signUp(){
         
         if (loginTextField.text?.characters.count)! <= 3 {
-            displayMyAlertMessage(message: "Login size must be between 4 and 32")
+            displayMyAlertMessage(title: "Your attention!", message: "Login size must be between 4 and 32", called: self)
             return
         }
         if (passwordTextField.text?.characters.count)! <= 7 {
-            displayMyAlertMessage(message: "Password size must be between 8 and 500")
+            displayMyAlertMessage(title: "Your attention!", message: "Password size must be between 8 and 500", called: self)
             return
         }
         if passwordTextField.text != repeatedPasswordTextField.text {
-            displayMyAlertMessage(message: "Password and Repeated Password must be the same!")
+            displayMyAlertMessage(title: "Your attention!", message: "Password and Repeated Password must be the same!",called: self)
             return
         }
         
@@ -98,11 +98,19 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
         UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
         UserDefaults.standard.synchronize()
         
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func didGetImageData(imageData: [ImageStruct]) {
+        for item in imageData {
+            print(item.id)
+        }
+        
         self.dismiss(animated: true, completion: nil)
     }
     
     func didGetError(errorNumber: Int, errorDiscription: String) {
-        displayMyAlertMessage(message: "Oops, it's an error \(errorNumber) : \(errorDiscription)")
+        displayMyAlertMessage(title: "Ooops", message: "It's an error \(errorNumber) : \(errorDiscription)", called: self)
     }
     
     //MARK: IBActions
@@ -128,19 +136,6 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
             authButton.frame.origin = newPos!
             repeatedPasswordTextField.isHidden = false
         }
-        
-    }
-    
-    //MARK: Stuff
-    
-    func displayMyAlertMessage(message: String) {
-        
-        let myAlert = UIAlertController(title: "Your attention!", message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-        
-        myAlert.addAction(okAction)
-        
-        self.present(myAlert, animated: true, completion: nil)
         
     }
     

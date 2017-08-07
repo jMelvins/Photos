@@ -8,14 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		A04E5C4B1F363142006CA19D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C4A1F363142006CA19D /* AppDelegate.swift */; };
-		A04E5C4D1F363142006CA19D /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C4C1F363142006CA19D /* InitialViewController.swift */; };
 		A04E5C501F363142006CA19D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A04E5C4E1F363142006CA19D /* Main.storyboard */; };
 		A04E5C531F363142006CA19D /* Photos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C511F363142006CA19D /* Photos.xcdatamodeld */; };
 		A04E5C551F363142006CA19D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A04E5C541F363142006CA19D /* Assets.xcassets */; };
 		A04E5C581F363142006CA19D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A04E5C561F363142006CA19D /* LaunchScreen.storyboard */; };
 		A04E5C641F363F3C006CA19D /* TabySegmentControll.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C631F363F3C006CA19D /* TabySegmentControll.swift */; };
-		A04E5C661F364050006CA19D /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C651F364050006CA19D /* SignInViewController.swift */; };
-		A04E5C681F364058006CA19D /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C671F364058006CA19D /* SignUpViewController.swift */; };
 		A04E5C6A1F3647EF006CA19D /* NetworkingStuff.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C691F3647EF006CA19D /* NetworkingStuff.swift */; };
 		A04E5C6C1F364822006CA19D /* UserStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C6B1F364822006CA19D /* UserStruct.swift */; };
 		A04E5C781F366A57006CA19D /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C771F366A57006CA19D /* SWRevealViewController.m */; };
@@ -23,6 +20,9 @@
 		A04E5C841F3670DD006CA19D /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C831F3670DD006CA19D /* PhotosCollectionViewController.swift */; };
 		A04E5C861F36727C006CA19D /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5C851F36727C006CA19D /* PhotosCollectionViewCell.swift */; };
 		A04E5CAC1F37A093006CA19D /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CAB1F37A093006CA19D /* AuthorizationViewController.swift */; };
+		A04E5CB21F37D7E2006CA19D /* ImageStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CB11F37D7E2006CA19D /* ImageStruct.swift */; };
+		A04E5CB41F37E48B006CA19D /* ImageGetter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CB31F37E48B006CA19D /* ImageGetter.swift */; };
+		A04E5CB61F37E5E0006CA19D /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CB51F37E5E0006CA19D /* Functions.swift */; };
 		F07FA49FCA700186AF58ECA3 /* Pods_Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC9BF56AB180C8706B1FA9D /* Pods_Photos.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,15 +32,12 @@
 		8022BCEFA9D9E8EED1E41611 /* Pods-Photos.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photos.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photos/Pods-Photos.release.xcconfig"; sourceTree = "<group>"; };
 		A04E5C471F363142006CA19D /* Photos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A04E5C4A1F363142006CA19D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A04E5C4C1F363142006CA19D /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		A04E5C4F1F363142006CA19D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A04E5C521F363142006CA19D /* Photos.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Photos.xcdatamodel; sourceTree = "<group>"; };
 		A04E5C541F363142006CA19D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A04E5C571F363142006CA19D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A04E5C591F363142006CA19D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A04E5C631F363F3C006CA19D /* TabySegmentControll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabySegmentControll.swift; sourceTree = "<group>"; };
-		A04E5C651F364050006CA19D /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
-		A04E5C671F364058006CA19D /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		A04E5C691F3647EF006CA19D /* NetworkingStuff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkingStuff.swift; sourceTree = "<group>"; };
 		A04E5C6B1F364822006CA19D /* UserStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserStruct.swift; sourceTree = "<group>"; };
 		A04E5C761F366A57006CA19D /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
@@ -50,6 +47,9 @@
 		A04E5C831F3670DD006CA19D /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
 		A04E5C851F36727C006CA19D /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 		A04E5CAB1F37A093006CA19D /* AuthorizationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthorizationViewController.swift; sourceTree = "<group>"; };
+		A04E5CB11F37D7E2006CA19D /* ImageStruct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageStruct.swift; sourceTree = "<group>"; };
+		A04E5CB31F37E48B006CA19D /* ImageGetter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageGetter.swift; sourceTree = "<group>"; };
+		A04E5CB51F37E5E0006CA19D /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +93,6 @@
 		A04E5C491F363142006CA19D /* Photos */ = {
 			isa = PBXGroup;
 			children = (
-				A04E5C7C1F366C5C006CA19D /* Auth */,
 				A04E5C4A1F363142006CA19D /* AppDelegate.swift */,
 				A04E5CAA1F37A077006CA19D /* Authorization */,
 				A04E5C831F3670DD006CA19D /* PhotosCollectionViewController.swift */,
@@ -105,6 +104,7 @@
 				A04E5C591F363142006CA19D /* Info.plist */,
 				A04E5C871F3676E1006CA19D /* Model */,
 				A04E5C751F366A57006CA19D /* SWRevealViewController */,
+				A04E5CB51F37E5E0006CA19D /* Functions.swift */,
 			);
 			path = Photos;
 			sourceTree = "<group>";
@@ -119,23 +119,14 @@
 			path = SWRevealViewController;
 			sourceTree = "<group>";
 		};
-		A04E5C7C1F366C5C006CA19D /* Auth */ = {
-			isa = PBXGroup;
-			children = (
-				A04E5C4C1F363142006CA19D /* InitialViewController.swift */,
-				A04E5C631F363F3C006CA19D /* TabySegmentControll.swift */,
-				A04E5C651F364050006CA19D /* SignInViewController.swift */,
-				A04E5C671F364058006CA19D /* SignUpViewController.swift */,
-			);
-			name = Auth;
-			sourceTree = "<group>";
-		};
 		A04E5C871F3676E1006CA19D /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				A04E5C511F363142006CA19D /* Photos.xcdatamodeld */,
 				A04E5C691F3647EF006CA19D /* NetworkingStuff.swift */,
 				A04E5C6B1F364822006CA19D /* UserStruct.swift */,
+				A04E5CB11F37D7E2006CA19D /* ImageStruct.swift */,
+				A04E5CB31F37E48B006CA19D /* ImageGetter.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -144,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				A04E5CAB1F37A093006CA19D /* AuthorizationViewController.swift */,
+				A04E5C631F363F3C006CA19D /* TabySegmentControll.swift */,
 			);
 			name = Authorization;
 			sourceTree = "<group>";
@@ -281,17 +273,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				A04E5C6A1F3647EF006CA19D /* NetworkingStuff.swift in Sources */,
-				A04E5C681F364058006CA19D /* SignUpViewController.swift in Sources */,
 				A04E5C641F363F3C006CA19D /* TabySegmentControll.swift in Sources */,
 				A04E5C841F3670DD006CA19D /* PhotosCollectionViewController.swift in Sources */,
 				A04E5C531F363142006CA19D /* Photos.xcdatamodeld in Sources */,
 				A04E5CAC1F37A093006CA19D /* AuthorizationViewController.swift in Sources */,
+				A04E5CB61F37E5E0006CA19D /* Functions.swift in Sources */,
 				A04E5C861F36727C006CA19D /* PhotosCollectionViewCell.swift in Sources */,
 				A04E5C821F366FE5006CA19D /* MenuViewController.swift in Sources */,
-				A04E5C4D1F363142006CA19D /* InitialViewController.swift in Sources */,
+				A04E5CB21F37D7E2006CA19D /* ImageStruct.swift in Sources */,
 				A04E5C781F366A57006CA19D /* SWRevealViewController.m in Sources */,
-				A04E5C661F364050006CA19D /* SignInViewController.swift in Sources */,
 				A04E5C4B1F363142006CA19D /* AppDelegate.swift in Sources */,
+				A04E5CB41F37E48B006CA19D /* ImageGetter.swift in Sources */,
 				A04E5C6C1F364822006CA19D /* UserStruct.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

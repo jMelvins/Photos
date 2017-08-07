@@ -1,44 +1,36 @@
 //
-//  NetworkingStuff.swift
+//  ImageGetter.swift
 //  Photos
 //
-//  Created by Vladislav Shilov on 05.08.17.
+//  Created by Vladislav Shilov on 07.08.17.
 //  Copyright © 2017 Vladislav Shilov. All rights reserved.
 //
 
 import Foundation
 import Alamofire
 
-protocol NetworkingStuffDelegate {
-    func didGetUser(_ user: User)
-    func didGetError(errorNumber: Int, errorDiscription: String)
+protocol ImageGetterDelegate {
     func didGetImageData(imageData: [ImageStruct])
+    func didGetError(errorNumber: Int, errorDiscription: String)
 }
 
-class NetworkingStuff {
+
+class ImageGetter {
     
+    fileprivate let delegate: ImageGetterDelegate
     
-    fileprivate let delegate: NetworkingStuffDelegate
-    
-    init(delegate: NetworkingStuffDelegate) {
+    init(delegate: ImageGetterDelegate) {
         self.delegate = delegate
     }
     
     typealias JSONStandart = [String : AnyObject]
     
-//    let headers : HTTPHeaders = [
-//        "Content-Type" : "application/json",
-//        "Accept" : "application/json"
-//    ]
-    
-    func getImageData(url: String){
+    func getImageData(url: String, page: Int, token: String){
         let headers : HTTPHeaders = [
             "Accept" : "*/*",
             "Access-Token" : "b8fOPrUFAGQB8n2evSZ58YmUOdp8flLb8NR24WzOqAY7QZNUUkEi0KsPNgZRfJ81"
         ]
         
-        let page = 0
-        let token = "b8fOPrUFAGQB8n2evSZ58YmUOdp8flLb8NR24WzOqAY7QZNUUkEi0KsPNgZRfJ81"
         let parameters: Parameters = [
             "page": page,
             "Access-Token": token
@@ -65,27 +57,6 @@ class NetworkingStuff {
         self.delegate.didGetImageData(imageData: imageArray)
     }
     
-    func authorization(url : String, userName: String, userPassword: String){
-        let headers : HTTPHeaders = [
-            "Content-Type" : "application/json",
-            "Accept" : "application/json"
-        ]
-        
-        let parameters: Parameters = [
-            "login": userName,
-            "password": userPassword
-        ]
-        
-        alamofireRequest(url: url, parameters: parameters, headers: headers, method: .post, encoding: JSONEncoding(options: []))
-    }
-    
-    private func authorizationResponse(readableJSON: JSONStandart){
-        let login = readableJSON["data"]?["login"]! as! String
-        let userId = readableJSON["data"]?["userId"]! as! Int
-        let token = readableJSON["data"]?["token"]! as! String
-        self.delegate.didGetUser(User(login: login, userId: userId, token: token))
-    }
-
     private func alamofireRequest(url: String, parameters: Parameters, headers: HTTPHeaders, method: HTTPMethod, encoding: ParameterEncoding){
         
         
@@ -107,11 +78,6 @@ class NetworkingStuff {
                     return
                 }
                 
-                if readableJSON?["data"]?["login"] != nil{
-                    self.authorizationResponse(readableJSON: readableJSON!)
-                    return
-                }
-                
                 if let resp = response.result.value as? JSONStandart{
                     let dictionary = resp["data"] as AnyObject
                     let dictItem = dictionary[0] as AnyObject
@@ -126,6 +92,6 @@ class NetworkingStuff {
             }
         }
     }
-
+    
     
 }

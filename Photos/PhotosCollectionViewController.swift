@@ -10,16 +10,15 @@ import UIKit
 
 private let reuseIdentifier = "cell"
 
-class PhotosCollectionViewController: UICollectionViewController {
+class PhotosCollectionViewController: UICollectionViewController, ImageGetterDelegate {
 
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
     var images = ["Map Marker Filled","Stack of Photos"]
     
-    var mainUser: User! {
-        didSet{
-            self.update()
-        }
-    }
+    var mainUser = User()
+    var imageStruct = [ImageStruct]()
+    var imageGetter: ImageGetter!
+    let imageURL = "http://213.184.248.43:9099/api/image"
     
     func update(){
         images.append("Map Marker")
@@ -30,6 +29,7 @@ class PhotosCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        imageGetter = ImageGetter(delegate: self)
         
 //        let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: "ModalVC")
 //        self.present(vc as! UIViewController, animated: true, completion: nil)
@@ -44,14 +44,30 @@ class PhotosCollectionViewController: UICollectionViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        
+
         let isUserLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
         
         if !isUserLoggedIn{
             self.performSegue(withIdentifier: "Auth", sender: self)
+        }else {
+            mainUser.login = UserDefaults.standard.value(forKey: "userLogin") as? String
+            mainUser.userId = UserDefaults.standard.value(forKey: "userId") as? Int
+            mainUser.token = UserDefaults.standard.value(forKey: "userToken") as? String
+            update()
+            imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
         }
     }
-
+    
+    // MARK: ImageGetterDelegate
+    
+    func didGetImageData(imageData: [ImageStruct]) {
+        displayMyAlertMessage(title: "Succes", message: "Data is succesfully parsed.", called: self)
+    }
+    
+    func didGetError(errorNumber: Int, errorDiscription: String) {
+        displayMyAlertMessage(title: "Ooops", message: "It's an error \(errorNumber) : \(errorDiscription)", called: self)
+    }
+    
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -68,7 +84,7 @@ class PhotosCollectionViewController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(mainUser)
+        print(mainUser.login)
     }
 
     // MARK: UICollectionViewDelegate
