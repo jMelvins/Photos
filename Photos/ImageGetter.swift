@@ -14,6 +14,7 @@ protocol ImageGetterDelegate {
     func didGetError(errorNumber: Int, errorDiscription: String)
     func didGetImage(image: Data)
     func didDeleteImage()
+    func didUploadImage(imageData: ImageStruct)
 }
 
 
@@ -67,6 +68,18 @@ class ImageGetter {
         alamofireRequest(url: imageURL, parameters: parameters, headers: headers, method: .post, encoding: JSONEncoding(options: []))
     }
     
+    func imageDownloaded(response: AnyObject){
+        
+        let id = response["id"] as! Int
+        let url = response["url"] as! String
+        let date = response["date"] as! Int
+        let lat = response["lat"] as! Float
+        let lng = response["lng"] as! Float
+        let imageItem = ImageStruct(id: id, url: url, date: date, lat: lat, lng: lng)
+        
+        self.delegate.didUploadImage(imageData: imageItem)
+    }
+    
     //MARK: Download image
     
     func downloadImage(imageURL: String){
@@ -97,6 +110,8 @@ class ImageGetter {
         alamofireRequest(url: url, parameters: parameters, headers: headers, method: .get, encoding: URLEncoding.default)
     }
     
+    //Method будет обозначать какой метод вызван: 0 - Get, 1 - Post
+    //Чтобы вызывать соответствующий delegate
     private func getImageRespnoce(response: AnyObject){
         print(response)
         var imageArray = [ImageStruct]()
@@ -113,6 +128,7 @@ class ImageGetter {
             
             imageArray.append(imageItem)
         }
+        
         
         self.delegate.didGetImageData(imageData: imageArray)
     }
@@ -140,6 +156,15 @@ class ImageGetter {
                 
                 //Т.к если мы постим, нам не нужно снова загружать картинку
                 guard method != HTTPMethod.post else{
+                    if let resp = response.result.value as? JSONStandart{
+                        let dictionary = resp["data"] as AnyObject
+                        if dictionary.hash != 0{
+                            if dictionary["url"] != nil{
+                                self.imageDownloaded(response: dictionary)
+                                return
+                            }
+                        }
+                    }
                     return
                 }
                 

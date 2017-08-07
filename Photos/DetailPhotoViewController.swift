@@ -11,9 +11,12 @@ import UIKit
 class DetailPhotoViewController: UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var dateLabel: UILabel!
     
-    var imageData: Data?
-
+    
+    //var imageData: Data?
+    var imageStruct: ImageStruct?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -23,7 +26,18 @@ class DetailPhotoViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        imageView.image = UIImage(data: imageData!)
+        let id = imageStruct?.id
+        let filename = "\(id!).png"
+        print("FiletNAME: \(filename)")
+        let photoURL = applicationDocumentsDirectory.appendingPathComponent(filename)
+        
+        let imageFromFile =  UIImage(contentsOfFile: photoURL.path)
+        imageView.image = imageFromFile
+        
+        let date = Date(timeIntervalSinceNow: TimeInterval((imageStruct?.date)!))
+        let littleDate = DateFormatter.localizedString(from: date, dateStyle: .medium, timeStyle: .none)
+        dateLabel.text = "\(littleDate)"
+
     }
     
 }

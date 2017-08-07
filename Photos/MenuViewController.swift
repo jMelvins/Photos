@@ -43,7 +43,10 @@ class MenuViewController: UITableViewController {
     }
 
     @IBAction func logoutBtn(_ sender: UIButton) {
+        //TODO: - Stop Alamofire download
+        
         UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+        UserDefaults.standard.set(false, forKey: "isImagesDownloaded")
         UserDefaults.standard.synchronize()        
     }
 
