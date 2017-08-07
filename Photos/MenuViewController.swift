@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import CoreData
 
 class MenuViewController: UITableViewController {
 
@@ -44,6 +46,29 @@ class MenuViewController: UITableViewController {
 
     @IBAction func logoutBtn(_ sender: UIButton) {
         //TODO: - Stop Alamofire download
+        //TODO: - Clear CoreData - GET
+        
+        // Initialize Fetch Request
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+        
+        // Configure Fetch Request
+        fetchRequest.includesPropertyValues = false
+        
+        let managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
+        
+        do {
+            let items = try managedObjectContext?.fetch(fetchRequest) as! [NSManagedObject]
+            
+            for item in items {
+                managedObjectContext?.delete(item)
+            }
+            
+            // Save Changes
+            try managedObjectContext?.save()
+            
+        } catch {
+            print(error)
+        }
         
         UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
         UserDefaults.standard.set(false, forKey: "isImagesDownloaded")

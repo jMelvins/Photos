@@ -10,9 +10,9 @@ import Foundation
 import Alamofire
 
 protocol ImageGetterDelegate {
-    func didGetImageData(imageData: [ImageStruct])
+    //func didGetImageData(imageData: [ImageStruct])
     func didGetError(errorNumber: Int, errorDiscription: String)
-    func didGetImage(image: Data)
+    func didGetImage(image: Data, imageData: ImageStruct)
     func didDeleteImage()
     func didUploadImage(imageData: ImageStruct)
 }
@@ -82,7 +82,7 @@ class ImageGetter {
     
     //MARK: Download image
     
-    func downloadImage(imageURL: String){
+    func downloadImage(imageURL: String, imageData: ImageStruct){
         
         Alamofire.request(imageURL).downloadProgress(closure: { (Progress) in
             print(Progress.fractionCompleted)
@@ -90,7 +90,7 @@ class ImageGetter {
         
             if let data = DataResponse.result.value{
                 print("Image Data: \(data)")
-                self.delegate.didGetImage(image: data)
+                self.delegate.didGetImage(image: data, imageData: imageData)
             }
         }
     }
@@ -130,7 +130,12 @@ class ImageGetter {
         }
         
         
-        self.delegate.didGetImageData(imageData: imageArray)
+        //значит должны вызывать downloadImage здесь,и толькоп соле загрузки уже делегат
+        for item in imageArray{
+            downloadImage(imageURL: item.url, imageData: item)
+        }
+        
+        //self.delegate.didGetImageData(imageData: imageArray)
     }
     
     private func alamofireRequest(url: String, parameters: Parameters, headers: HTTPHeaders, method: HTTPMethod, encoding: ParameterEncoding){

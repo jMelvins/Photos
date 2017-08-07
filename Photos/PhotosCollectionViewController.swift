@@ -34,6 +34,7 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        UserDefaults.standard.setValue(false, forKey: "isImagesDownloaded")
         managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
         imageGetter = ImageGetter(delegate: self)
         
@@ -41,7 +42,6 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
         if Reachability.isConnectedToNetwork() != true {
             loadFromCoreData()
             print("Internet connection FAILED")
-            return
         }
         
         
@@ -75,10 +75,7 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
                 UserDefaults.standard.set(true, forKey: "isImagesDownloaded")
                 UserDefaults.standard.synchronize()
             }
-            //Исправить на адекватную проверку
-//            if images.isEmpty{
-//                 imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
-//            }
+            
         }
     }
     
@@ -154,34 +151,91 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
             }
         }
         
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
     }
     
     func didDeleteImage() {
-        images.remove(at: (indexPathToDelete?.row)!)
+        //images.remove(at: (indexPathToDelete?.row)!)
+        
+        // Initialize Fetch Request
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+        fetchRequest.includesPropertyValues = false
+        
+        do {
+            let items = try managedObjectContext?.fetch(fetchRequest) as! [NSManagedObject]
+            
+            managedObjectContext.delete(items[(indexPathToDelete?.row)!])
+            imageStruct.remove(at: (indexPathToDelete?.row)!)
+            
+            // Save Changes
+            try managedObjectContext?.save()
+            
+        } catch {
+            print(error)
+        }
         
         DispatchQueue.main.async {
             self.collectionView?.reloadData()
         }
     }
     
-    func didGetImage(image: Data) {
-        images.append(image)
+    
+    //Это я сделал для загрузки с сервера, 
+    //а тепреь нужно добавить такое же и для добаволения с библеотеки
+    func didGetImage(image: Data, imageData: ImageStruct) {
+        imageStruct.append(imageData)
+        
+        let filename = getDocumentsDirectory().appendingPathComponent("\(imageData.id).png")
+        print(filename)
+        try? image.write(to: filename)
+        
+        let photoEntity = Photo(context: managedObjectContext!)
+        
+        
+        let date = Date(timeIntervalSince1970: TimeInterval(imageData.date))
+        print("Date: \(date)")
+        photoEntity.date = date as NSDate
+        photoEntity.lat = imageData.lat
+        photoEntity.lng = imageData.lng
+        photoEntity.id = Int16(imageData.id)
+        
+        do {
+            try managedObjectContext?.save()
+        } catch  {
+            print("Core Data Error: \(error)")
+        }
         
         DispatchQueue.main.async {
             self.collectionView?.reloadData()
         }
     }
     
-    func didGetImageData(imageData: [ImageStruct]) {
-        
-        imageStruct += imageData
-        
-        for imageItem in imageStruct{
-            imageGetter.downloadImage(imageURL: imageItem.url)
-        }
-        
-        //TODO: Вот тут и нужно по идеи сохранять картинку в кор дату
-    }
+//    func didGetImage(image: Data) {
+//        images.append(image)
+//        
+//        
+//        DispatchQueue.main.async {
+//            self.collectionView?.reloadData()
+//        }
+//    }
+    
+//    func didGetImageData(imageData: [ImageStruct]) {
+//        
+//        imageStruct += imageData
+//        
+//        for imageItem in imageStruct{
+//            imageGetter.downloadImage(imageURL: imageItem.url)
+//        }
+//
+//        
+//        //TODO: Вот тут и нужно по идеи сохранять картинку в кор дату
+//        //можно сюда закинуть сохранения в кор дату
+//        //Или нет
+//        //Переписать didGetImage в модели:  в функция загрзки картинки  кидать еще и imageData 
+//        //и потом уже в делегате выводить
+//    }
     
     func didGetError(errorNumber: Int, errorDiscription: String) {
         displayMyAlertMessage(title: "Ooops", message: "It's an error \(errorNumber) : \(errorDiscription)", called: self)
@@ -382,7 +436,7 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate {
             imageGetter.uploadImage(imageURL: imageURL, token: mainUser.token!, date: date, lat: Float(lat), lng: Float(lng), imageData: UIImagePNGRepresentation(theImage)!)
             
             //TODO: - Save image in CoreData
-            images.append(UIImagePNGRepresentation(theImage)!)
+            //images.append(UIImagePNGRepresentation(theImage)!)
             
             //Нужен специальный индекс для каждоый картинки, например ее ID
             //значит нужно вызывать метож сохранения в кор дату толкьо тогда, когда картинка успешно загруена на сервер
