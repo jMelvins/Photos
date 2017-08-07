@@ -13,27 +13,17 @@ private let reuseIdentifier = "cell"
 class PhotosCollectionViewController: UICollectionViewController, ImageGetterDelegate {
 
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
-    var images = ["Map Marker Filled","Stack of Photos"]
+    var images: [Data] = []
     
     var mainUser = User()
     var imageStruct = [ImageStruct]()
     var imageGetter: ImageGetter!
     let imageURL = "http://213.184.248.43:9099/api/image"
-    
-    func update(){
-        images.append("Map Marker")
-        images.append("Stack of Photos Filled")
-        images.append("Stack of Photos Filled")
-        collectionView?.reloadData()
-    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         imageGetter = ImageGetter(delegate: self)
-        
-//        let vc : AnyObject! = self.storyboard!.instantiateViewController(withIdentifier: "ModalVC")
-//        self.present(vc as! UIViewController, animated: true, completion: nil)
-        //self.show(vc as! UIViewController, sender: vc)
 
         if self.revealViewController() != nil {
             menuBarButton.target = self.revealViewController()
@@ -53,15 +43,29 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
             mainUser.login = UserDefaults.standard.value(forKey: "userLogin") as? String
             mainUser.userId = UserDefaults.standard.value(forKey: "userId") as? Int
             mainUser.token = UserDefaults.standard.value(forKey: "userToken") as? String
-            update()
+            
             imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
         }
     }
     
     // MARK: ImageGetterDelegate
     
+    func didGetImage(image: Data) {
+        images.append(image)
+        
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
+    }
+    
     func didGetImageData(imageData: [ImageStruct]) {
         displayMyAlertMessage(title: "Succes", message: "Data is succesfully parsed.", called: self)
+        
+        imageStruct = imageData
+        
+        for imageItem in imageStruct{
+            imageGetter.downloadImage(imageURL: imageItem.url)
+        }
     }
     
     func didGetError(errorNumber: Int, errorDiscription: String) {
@@ -71,14 +75,13 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         return images.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotosCollectionViewCell
     
-        cell.imageView.image = UIImage(named: images[indexPath.row])
+        cell.imageView.image = UIImage(data: images[indexPath.row])
     
         return cell
     }

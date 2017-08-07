@@ -12,6 +12,7 @@ import Alamofire
 protocol ImageGetterDelegate {
     func didGetImageData(imageData: [ImageStruct])
     func didGetError(errorNumber: Int, errorDiscription: String)
+    func didGetImage(image: Data)
 }
 
 
@@ -25,10 +26,29 @@ class ImageGetter {
     
     typealias JSONStandart = [String : AnyObject]
     
+    //MARK: Download image
+    
+    func downloadImage(imageURL: String){
+        
+        Alamofire.request(imageURL).downloadProgress(closure: { (Progress) in
+            print(Progress.fractionCompleted)
+        }).responseData { (DataResponse) in
+            
+            if let data = DataResponse.result.value{
+                print("Image Data: \(data)")
+                self.delegate.didGetImage(image: data)
+            }
+            
+        }
+        
+    }
+    
+    //MARK : Get Image JSON
+    
     func getImageData(url: String, page: Int, token: String){
         let headers : HTTPHeaders = [
             "Accept" : "*/*",
-            "Access-Token" : "b8fOPrUFAGQB8n2evSZ58YmUOdp8flLb8NR24WzOqAY7QZNUUkEi0KsPNgZRfJ81"
+            "Access-Token" : token
         ]
         
         let parameters: Parameters = [
@@ -38,7 +58,7 @@ class ImageGetter {
         alamofireRequest(url: url, parameters: parameters, headers: headers, method: .get, encoding: URLEncoding.default)
     }
     
-    private func getImageRespnce(response: AnyObject){
+    private func getImageRespnoce(response: AnyObject){
         print(response)
         var imageArray = [ImageStruct]()
         for index in 0..<response.count{
@@ -80,10 +100,12 @@ class ImageGetter {
                 
                 if let resp = response.result.value as? JSONStandart{
                     let dictionary = resp["data"] as AnyObject
-                    let dictItem = dictionary[0] as AnyObject
-                    if dictItem["url"] != nil{
-                        self.getImageRespnce(response: dictionary)
-                        return
+                    if dictionary.hash != 0{
+                        let dictItem = dictionary[0] as AnyObject
+                        if dictItem["url"] != nil{
+                            self.getImageRespnoce(response: dictionary)
+                            return
+                        }
                     }
                 }
                 
@@ -92,6 +114,8 @@ class ImageGetter {
             }
         }
     }
+    
+    
     
     
 }
