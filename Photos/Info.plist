@@ -28,6 +28,10 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Let the app to know where you are. It helps post new images. Without this you can&apos;t post new photos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Add new photo.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import CoreLocation
 
 private let reuseIdentifier = "cell"
 
-class PhotosCollectionViewController: UICollectionViewController, ImageGetterDelegate {
+class PhotosCollectionViewController: UICollectionViewController, ImageGetterDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
     var images: [Data] = []
@@ -19,7 +20,9 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     var imageStruct = [ImageStruct]()
     var imageGetter: ImageGetter!
     let imageURL = "http://213.184.248.43:9099/api/image"
-
+    
+    var image: UIImage?
+    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,6 +79,20 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     // MARK: IBActions
     
     @IBAction func addButton(_ sender: UIBarButtonItem) {
+        
+        let locationAuthStatus = CLLocationManager.authorizationStatus()
+        
+        if locationAuthStatus == .notDetermined {
+            locationManager.requestWhenInUseAuthorization()
+            return
+        }
+        
+        if locationAuthStatus == .denied || locationAuthStatus == .restricted {
+            displayMyAlertMessage(title: "Location auth status", message: "Please enable location services for this app in Settings.", called: self)
+            return
+        }
+        
+        pickPhoto()
     }
     
     // MARK: UICollectionViewDataSource
@@ -136,4 +153,84 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     }
     */
 
+}
+
+
+extension PhotosCollectionViewController:
+UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func takePhotoWithCamera() {
+        let imagePicker = UIImagePickerController()
+        
+        //изменяем на цвет соответтствующий цвету тайнта в текущем ВК
+        imagePicker.view.tintColor = view.tintColor
+        imagePicker.sourceType = .camera
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func choosePhotoFromLibrary() {
+        let imagePicker = UIImagePickerController()        //let imagePicker = UIImagePickerController()
+        
+        imagePicker.view.tintColor = view.tintColor
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func pickPhoto() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            showPhotoMenu()
+        } else {
+            choosePhotoFromLibrary()
+        }
+    }
+    
+    func showPhotoMenu() {
+        let alertController = UIAlertController(title: nil, message: nil,
+                                                preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel,
+                                         handler: nil)
+        alertController.addAction(cancelAction)
+        
+        let takePhotoAction = UIAlertAction(title: "Take Photo",
+                                            style: .default,
+                                            handler: { _ in self.takePhotoWithCamera() })
+        alertController.addAction(takePhotoAction)
+        
+        let chooseFromLibraryAction = UIAlertAction(title: "Choose From Library",
+                                                    style: .default,
+                                                    handler: { _ in self.choosePhotoFromLibrary() })
+        alertController.addAction(chooseFromLibraryAction)
+        
+        present(alertController, animated: true, completion: nil)
+        
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [String : Any]) {
+        //Если брать картинку без редактирвоания
+        //image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        //? вместо ! потомучто image -- optional instance variable.
+        image = info[UIImagePickerControllerEditedImage] as? UIImage
+        
+        //т.к. image - опцоиональный тип
+        if let theImage = image {
+            images.append(UIImagePNGRepresentation(theImage)!)
+            self.collectionView?.reloadData()
+        }
+        
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
 }
