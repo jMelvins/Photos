@@ -74,7 +74,7 @@ class ImageGetter {
         Alamofire.request(imageURL).downloadProgress(closure: { (Progress) in
             print(Progress.fractionCompleted)
         }).responseData { (DataResponse) in
-            
+        
             if let data = DataResponse.result.value{
                 print("Image Data: \(data)")
                 self.delegate.didGetImage(image: data)

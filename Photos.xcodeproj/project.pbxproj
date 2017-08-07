@@ -25,6 +25,7 @@
 		A04E5CB61F37E5E0006CA19D /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CB51F37E5E0006CA19D /* Functions.swift */; };
 		A04E5CB81F37F9E9006CA19D /* DetailPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CB71F37F9E9006CA19D /* DetailPhotoViewController.swift */; };
 		A04E5CBB1F383001006CA19D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04E5CBA1F383001006CA19D /* MapViewController.swift */; };
+		A04E5CBF1F38AC8B006CA19D /* mapData.csv in Resources */ = {isa = PBXBuildFile; fileRef = A04E5CBE1F38AC8B006CA19D /* mapData.csv */; };
 		F07FA49FCA700186AF58ECA3 /* Pods_Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC9BF56AB180C8706B1FA9D /* Pods_Photos.framework */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +55,7 @@
 		A04E5CB51F37E5E0006CA19D /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		A04E5CB71F37F9E9006CA19D /* DetailPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailPhotoViewController.swift; sourceTree = "<group>"; };
 		A04E5CBA1F383001006CA19D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		A04E5CBE1F38AC8B006CA19D /* mapData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = mapData.csv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				A04E5C511F363142006CA19D /* Photos.xcdatamodeld */,
+				A04E5CBE1F38AC8B006CA19D /* mapData.csv */,
 				A04E5C691F3647EF006CA19D /* NetworkingStuff.swift */,
 				A04E5C6B1F364822006CA19D /* UserStruct.swift */,
 				A04E5CB11F37D7E2006CA19D /* ImageStruct.swift */,
@@ -227,6 +230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A04E5C581F363142006CA19D /* LaunchScreen.storyboard in Resources */,
+				A04E5CBF1F38AC8B006CA19D /* mapData.csv in Resources */,
 				A04E5C551F363142006CA19D /* Assets.xcassets in Resources */,
 				A04E5C501F363142006CA19D /* Main.storyboard in Resources */,
 			);

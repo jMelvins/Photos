@@ -20,6 +20,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         GMSServices.provideAPIKey("AIzaSyBcn9fVPb8QCZ3s9TNNvnoaAx0XGV1DwZc")
+               print(applicationDocumentsDirectory.path)
+        
+        let defaults = UserDefaults.standard
+        let isPreloaded = defaults.bool(forKey: "isPreloaded")
+        if !isPreloaded {
+            preloadData()
+            defaults.set(true, forKey: "isPreloaded")
+        }
         
         return true
     }
@@ -92,6 +100,137 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+    
+    lazy var applicationDocumentsDirectory: URL = {
+        // The directory the application uses to store the Core Data store file. This code uses a directory named "com.appcoda.CoreDataDemo" in the application's documents Application Support directory.
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return urls[urls.count-1]
+    }()
+    
+    lazy var managedObjectContext: NSManagedObjectContext = {
+        // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
+        let managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
+        return managedObjectContext!
+    }()
+    
+
+    // MARK: - CSV Parser Methods
+    
+    func parseCSV (_ contentsOfURL: URL, encoding: String.Encoding) -> [(lat: String, lng: String, disc: String, name: String)]? {
+        
+        // Load the CSV file and parse it
+        let delimiter = ","
+        var items:[(lat: String, lng: String, disc: String, name: String)]?
+        
+        do {
+            let content = try String(contentsOf: contentsOfURL, encoding: encoding)
+            print(content)
+            items = []
+            let lines:[String] = content.components(separatedBy: CharacterSet.newlines) as [String]
+            
+            for line in lines {
+                var values:[String] = []
+                if line != "" {
+                    // For a line with double quotes
+                    // we use NSScanner to perform the parsing
+                    if line.range(of: "\"") != nil {
+                        var textToScan:String = line
+                        var value:NSString?
+                        var textScanner:Scanner = Scanner(string: textToScan)
+                        while textScanner.string != "" {
+                            
+                            if (textScanner.string as NSString).substring(to: 1) == "\"" {
+                                textScanner.scanLocation += 1
+                                textScanner.scanUpTo("\"", into: &value)
+                                textScanner.scanLocation += 1
+                            } else {
+                                textScanner.scanUpTo(delimiter, into: &value)
+                            }
+                            
+                            // Store the value into the values array
+                            values.append(value! as String)
+                            
+                            // Retrieve the unscanned remainder of the string
+                            if textScanner.scanLocation < textScanner.string.characters.count {
+                                textToScan = (textScanner.string as NSString).substring(from: textScanner.scanLocation + 1)
+                            } else {
+                                textToScan = ""
+                            }
+                            textScanner = Scanner(string: textToScan)
+                        }
+                        
+                        // For a line without double quotes, we can simply separate the string
+                        // by using the delimiter (e.g. comma)
+                    } else  {
+                        values = line.components(separatedBy: delimiter)
+                    }
+                    
+                    // Put the values into the tuple and add it to the items array
+                    let item = (lat: values[0], lng: values[1], disc: values[2], name: values[3])
+                    items?.append(item)
+                }
+            }
+            
+        } catch {
+            print(error)
+        }
+        
+        return items
+    }
+    
+    func preloadData () {
+        
+        // Load the data file. For any reasons it can't be loaded, we just return
+        //        guard let remoteURL = URL(string: "https://googledrive.com/host/0ByZhaKOAvtNGTHhXUUpGS3VqZnM/menudata.csv") else {
+        //            return
+        //        }
+        
+        //Load form CSV
+        guard let contentsOfURL = Bundle.main.url(forResource: "mapData", withExtension: "csv") else {
+            return
+        }
+        
+        // Remove all the menu items before preloading
+        removeData()
+        
+        if let items = parseCSV(contentsOfURL, encoding: String.Encoding.utf8) {
+            // Preload the menu items
+            for item in items {
+                let mapItem = NSEntityDescription.insertNewObject(forEntityName: "MapItem", into: managedObjectContext) as! MapItem
+                
+                let lng: Float = Float(item.lng)!
+                let lat: Float = Float(item.lat)!
+                
+                mapItem.latitude = lat
+                mapItem.longitude = lng
+                mapItem.discription = item.disc
+                mapItem.name = item.name
+                
+                do {
+                    try managedObjectContext.save()
+                } catch {
+                    print(error)
+                }
+            }
+            
+        }
+    }
+    
+    func removeData () {
+        // Remove the existing items
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MapItem")
+        
+        do {
+            let menuItems = try managedObjectContext.fetch(fetchRequest) as! [MapItem]
+            for menuItem in menuItems {
+                managedObjectContext.delete(menuItem)
+            }
+        } catch {
+            print(error)
+        }
+        
+    }
+
 
 }
 
