@@ -79,9 +79,17 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     // MARK: IBActions
     
     @IBAction func addButton(_ sender: UIBarButtonItem) {
+        guard CLLocationManager.locationServicesEnabled() else {
+            displayMyAlertMessage(
+                title: "Please turn on location services",
+                message: "This app needs location services in order to report the weather " +
+                    "for your current location.\n" +
+                "Go to Settings → Privacy → Location Services and turn location services on.",
+                called: self)
+            return
+        }
         
         let locationAuthStatus = CLLocationManager.authorizationStatus()
-        
         if locationAuthStatus == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
             return
@@ -92,7 +100,30 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
             return
         }
         
+        //Если все ОК, то начинаем искать наши координаты
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+        locationManager.startUpdatingLocation()
+        
         pickPhoto()
+    }
+    
+    // MARK: CLLocationManager
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        let newLocation = locations.last
+        
+        print("Loction: \(newLocation?.coordinate)")
+        
+        locationManager.stopUpdatingLocation()
+        
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        
+        print("Error: \(error)")
+        
     }
     
     // MARK: UICollectionViewDataSource

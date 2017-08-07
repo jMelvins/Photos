@@ -31,40 +31,6 @@ class NetworkingStuff {
 //        "Accept" : "application/json"
 //    ]
     
-    func getImageData(url: String){
-        let headers : HTTPHeaders = [
-            "Accept" : "*/*",
-            "Access-Token" : "b8fOPrUFAGQB8n2evSZ58YmUOdp8flLb8NR24WzOqAY7QZNUUkEi0KsPNgZRfJ81"
-        ]
-        
-        let page = 0
-        let token = "b8fOPrUFAGQB8n2evSZ58YmUOdp8flLb8NR24WzOqAY7QZNUUkEi0KsPNgZRfJ81"
-        let parameters: Parameters = [
-            "page": page,
-            "Access-Token": token
-        ]
-        alamofireRequest(url: url, parameters: parameters, headers: headers, method: .get, encoding: URLEncoding.default)
-    }
-    
-    private func getImageRespnce(response: AnyObject){
-        print(response)
-        var imageArray = [ImageStruct]()
-        for index in 0..<response.count{
-            let item = response[index] as AnyObject
-            
-            let id = item["id"] as! Int
-            let url = item["url"] as! String
-            let date = item["date"] as! Int
-            let lat = item["lat"] as! Float
-            let lng = item["lng"] as! Float
-            let imageItem = ImageStruct(id: id, url: url, date: date, lat: lat, lng: lng)
-            
-            imageArray.append(imageItem)
-        }
-        
-        self.delegate.didGetImageData(imageData: imageArray)
-    }
-    
     func authorization(url : String, userName: String, userPassword: String){
         let headers : HTTPHeaders = [
             "Content-Type" : "application/json",
@@ -110,15 +76,6 @@ class NetworkingStuff {
                 if readableJSON?["data"]?["login"] != nil{
                     self.authorizationResponse(readableJSON: readableJSON!)
                     return
-                }
-                
-                if let resp = response.result.value as? JSONStandart{
-                    let dictionary = resp["data"] as AnyObject
-                    let dictItem = dictionary[0] as AnyObject
-                    if dictItem["url"] != nil{
-                        self.getImageRespnce(response: dictionary)
-                        return
-                    }
                 }
                 
             }catch {

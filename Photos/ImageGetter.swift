@@ -62,7 +62,8 @@ class ImageGetter {
         print(response)
         var imageArray = [ImageStruct]()
         for index in 0..<response.count{
-            let item = response[index] as AnyObject
+            let item = response.objectAt(index)
+            //let item = response[index] as AnyObject
             
             let id = item["id"] as! Int
             let url = item["url"] as! String
@@ -101,7 +102,8 @@ class ImageGetter {
                 if let resp = response.result.value as? JSONStandart{
                     let dictionary = resp["data"] as AnyObject
                     if dictionary.hash != 0{
-                        let dictItem = dictionary[0] as AnyObject
+                        let dictItem = dictionary.objectAt(0)
+                        //let dictItem = dictionary[0] as AnyObject
                         if dictItem["url"] != nil{
                             self.getImageRespnoce(response: dictionary)
                             return

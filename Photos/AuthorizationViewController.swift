@@ -34,6 +34,9 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(AuthorizationViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
+        
         networkingStuff = NetworkingStuff(delegate: self)
         
         //настройка сегмент контроллера
@@ -45,6 +48,11 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
         
         repeatedPasswordTextField.isHidden = true
     }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
 
     //MARK: Authorization functions
     

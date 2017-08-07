@@ -32,6 +32,8 @@
 	<string>Let the app to know where you are. It helps post new images. Without this you can&apos;t post new photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Add new photo.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Let take a photo.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
