@@ -125,6 +125,12 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
     
     
     @IBAction func authBtnAction(_ sender: UIButton) {
+        
+        if Reachability.isConnectedToNetwork() != true {
+            displayMyAlertMessage(title: "Networking issue.", message: "You cannot auth without the internet connection.", called: self)
+            return
+        }
+        
         if segmentedControl.selectedSegmentIndex == 0{
             signIn()
         }else {
@@ -137,11 +143,13 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
         if sender.selectedSegmentIndex == 0 {
             animation(oldValue: newPos!, newValue: defaultPosition!, textFieldOpacity: 1, tfoNew: 0)
             authButton.frame.origin = defaultPosition!
+            statusLabel.text = "SignIn"
             //repeatedPasswordTextField.isHidden = true
         }else{
             animation(oldValue: defaultPosition!, newValue: newPos!, textFieldOpacity: 0, tfoNew: 1)
             //чтобы кнопка была активной меняем ее положение
             authButton.frame.origin = newPos!
+            statusLabel.text = "SignUp"
             repeatedPasswordTextField.isHidden = false
         }
         

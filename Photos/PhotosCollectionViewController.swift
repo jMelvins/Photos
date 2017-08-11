@@ -34,12 +34,13 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        UserDefaults.standard.setValue(false, forKey: "isImagesDownloaded")
+        //UserDefaults.standard.setValue(false, forKey: "isImagesDownloaded")
+        let isImagesDownloaded = UserDefaults.standard.bool(forKey: "isImagesDownloaded")
         managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
         imageGetter = ImageGetter(delegate: self)
         
         //Если нет интернета, загружаем из CoreData
-        if Reachability.isConnectedToNetwork() != true {
+        if Reachability.isConnectedToNetwork() != true || isImagesDownloaded{
             loadFromCoreData()
             print("Internet connection FAILED")
         }
@@ -73,6 +74,7 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
             if !isImagesDownloaded{
                 imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
                 UserDefaults.standard.set(true, forKey: "isImagesDownloaded")
+                UserDefaults.standard.set(true, forKey: "isImagesLoadedToCoreData")
                 UserDefaults.standard.synchronize()
             }
             
@@ -248,6 +250,12 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     // MARK: IBActions
     
     @IBAction func addButton(_ sender: UIBarButtonItem) {
+        
+        if Reachability.isConnectedToNetwork() != true {
+            displayMyAlertMessage(title: "Networking issue.", message: "You can not appload new images without the internet connection.", called: self)
+            return
+        }
+        
         guard CLLocationManager.locationServicesEnabled() else {
             displayMyAlertMessage(
                 title: "Please turn on location services",

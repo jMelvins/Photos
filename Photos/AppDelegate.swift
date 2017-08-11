@@ -19,6 +19,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        let barTintColor = UIColor(red: 93/255, green: 208/255, blue: 192/255,
+                                   alpha: 0.75)
+        
+        if let statusBar = UIApplication.shared.value(forKeyPath: "statusBarWindow.statusBar") as? UIView{
+            statusBar.backgroundColor = barTintColor
+        }
+        
+        
+        
         GMSServices.provideAPIKey("AIzaSyBcn9fVPb8QCZ3s9TNNvnoaAx0XGV1DwZc")
                print(applicationDocumentsDirectory.path)
         
