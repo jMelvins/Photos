@@ -34,7 +34,7 @@ class DetailPhotoViewController: UIViewController {
         let imageFromFile =  UIImage(contentsOfFile: photoURL.path)
         imageView.image = imageFromFile
         
-        let date = Date(timeIntervalSinceNow: TimeInterval((imageStruct?.date)!))
+        let date = Date(timeIntervalSince1970: TimeInterval((imageStruct?.date)!))
         let littleDate = DateFormatter.localizedString(from: date, dateStyle: .medium, timeStyle: .none)
         dateLabel.text = "\(littleDate)"
 

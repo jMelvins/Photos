@@ -201,7 +201,7 @@
 				TargetAttributes = {
 					A04E5C461F363142006CA19D = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 5YVMX8TY6Q;
+						DevelopmentTeam = 8VWZ5VFCWK;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -430,11 +430,11 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 5YVMX8TY6Q;
+				DEVELOPMENT_TEAM = 8VWZ5VFCWK;
 				INFOPLIST_FILE = Photos/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = VladShilov.Photos;
+				PRODUCT_BUNDLE_IDENTIFIER = VladShilov.Photos1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Photos-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
@@ -447,11 +447,11 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 5YVMX8TY6Q;
+				DEVELOPMENT_TEAM = 8VWZ5VFCWK;
 				INFOPLIST_FILE = Photos/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = VladShilov.Photos;
+				PRODUCT_BUNDLE_IDENTIFIER = VladShilov.Photos1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Photos-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
