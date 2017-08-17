@@ -6,6 +6,7 @@
 //  Copyright © 2017 Vladislav Shilov. All rights reserved.
 //
 
+
 import Foundation
 import Alamofire
 
@@ -110,8 +111,6 @@ class ImageGetter {
         alamofireRequest(url: url, parameters: parameters, headers: headers, method: .get, encoding: URLEncoding.default)
     }
     
-    //Method будет обозначать какой метод вызван: 0 - Get, 1 - Post
-    //Чтобы вызывать соответствующий delegate
     private func getImageRespnoce(response: AnyObject){
         print(response)
         var imageArray = [ImageStruct]()
@@ -195,8 +194,5 @@ class ImageGetter {
             }
         }
     }
-    
-    
-    
-    
 }
+

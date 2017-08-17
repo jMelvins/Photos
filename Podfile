@@ -7,6 +7,7 @@ target 'Photos' do
 	pod 'Alamofire', '~> 4.4'
 	pod 'GoogleMaps'
   	pod 'GooglePlaces'
+	pod 'SwiftyJSON'
   # Pods for Photos
 
 end

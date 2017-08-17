@@ -34,6 +34,7 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(AuthorizationViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
