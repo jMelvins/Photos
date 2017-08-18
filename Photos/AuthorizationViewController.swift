@@ -34,6 +34,7 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(AuthorizationViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
@@ -68,7 +69,21 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
         }
         statusLabel.text = "SignIn"
         
-        networkingStuff.authorization(url: signinURL, userName: loginTextField.text!, userPassword: passwordTextField.text!)
+        RequestManager.authorization(isSignIn: true, userName: loginTextField.text!, userPassword: passwordTextField.text!) { user in
+            let userLogin = user.login
+            let userId = user.userId
+            let userToken = user.token
+            
+            //Store data
+            UserDefaults.standard.set(userLogin, forKey: "userLogin")
+            UserDefaults.standard.set(userId, forKey: "userId")
+            UserDefaults.standard.set(userToken, forKey: "userToken")
+            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+            UserDefaults.standard.synchronize()
+            
+            self.dismiss(animated: true, completion: nil)
+        }
+        //networkingStuff.authorization(url: signinURL, userName: loginTextField.text!, userPassword: passwordTextField.text!)
     }
     
     func signUp(){
@@ -88,7 +103,21 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
         
         statusLabel.text = "SignUp"
         
-        networkingStuff.authorization(url: signupURL, userName: loginTextField.text!, userPassword: passwordTextField.text!)
+        RequestManager.authorization(isSignIn: false, userName: loginTextField.text!, userPassword: passwordTextField.text!) { user in
+            let userLogin = user.login
+            let userId = user.userId
+            let userToken = user.token
+            
+            //Store data
+            UserDefaults.standard.set(userLogin, forKey: "userLogin")
+            UserDefaults.standard.set(userId, forKey: "userId")
+            UserDefaults.standard.set(userToken, forKey: "userToken")
+            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+            UserDefaults.standard.synchronize()
+            
+            self.dismiss(animated: true, completion: nil)
+        }
+        //networkingStuff.authorization(url: signupURL, userName: loginTextField.text!, userPassword: passwordTextField.text!)
     }
     
     //MARK: Delegate
@@ -125,6 +154,12 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
     
     
     @IBAction func authBtnAction(_ sender: UIButton) {
+        
+        if Reachability.isConnectedToNetwork() != true {
+            displayMyAlertMessage(title: "Networking issue.", message: "You cannot auth without the internet connection.", called: self)
+            return
+        }
+        
         if segmentedControl.selectedSegmentIndex == 0{
             signIn()
         }else {
@@ -137,11 +172,13 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
         if sender.selectedSegmentIndex == 0 {
             animation(oldValue: newPos!, newValue: defaultPosition!, textFieldOpacity: 1, tfoNew: 0)
             authButton.frame.origin = defaultPosition!
+            statusLabel.text = "SignIn"
             //repeatedPasswordTextField.isHidden = true
         }else{
             animation(oldValue: defaultPosition!, newValue: newPos!, textFieldOpacity: 0, tfoNew: 1)
             //чтобы кнопка была активной меняем ее положение
             authButton.frame.origin = newPos!
+            statusLabel.text = "SignUp"
             repeatedPasswordTextField.isHidden = false
         }
         

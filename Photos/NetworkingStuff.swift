@@ -45,7 +45,7 @@ class NetworkingStuff {
         alamofireRequest(url: url, parameters: parameters, headers: headers, method: .post, encoding: JSONEncoding(options: []))
     }
     
-    private func authorizationResponse(readableJSON: JSONStandart){
+    private func authorizationParser(readableJSON: JSONStandart){
         let login = readableJSON["data"]?["login"]! as! String
         let userId = readableJSON["data"]?["userId"]! as! Int
         let token = readableJSON["data"]?["token"]! as! String
@@ -74,7 +74,7 @@ class NetworkingStuff {
                 }
                 
                 if readableJSON?["data"]?["login"] != nil{
-                    self.authorizationResponse(readableJSON: readableJSON!)
+                    self.authorizationParser(readableJSON: readableJSON!)
                     return
                 }
                 

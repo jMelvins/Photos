@@ -14,15 +14,13 @@ import CoreData
 
 private let reuseIdentifier = "cell"
 
-class PhotosCollectionViewController: UICollectionViewController, ImageGetterDelegate, CLLocationManagerDelegate {
-
+class PhotosCollectionViewController: UICollectionViewController, CLLocationManagerDelegate {
+    
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
     var images: [Data] = []
     
     var mainUser = User()
     var imageStruct = [ImageStruct]()
-    var imageGetter: ImageGetter!
-    let imageURL = "http://213.184.248.43:9099/api/image"
     
     var image: UIImage?
     let locationManager = CLLocationManager()
@@ -34,31 +32,33 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        UserDefaults.standard.setValue(false, forKey: "isImagesDownloaded")
+        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+        UserDefaults.standard.synchronize()
+        //UserDefaults.standard.setValue(false, forKey: "isImagesDownloaded")
+        let isImagesDownloaded = UserDefaults.standard.bool(forKey: "isImagesDownloaded")
         managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
-        imageGetter = ImageGetter(delegate: self)
         
         //Если нет интернета, загружаем из CoreData
-        if Reachability.isConnectedToNetwork() != true {
+        if !Reachability.isConnectedToNetwork() || isImagesDownloaded{
             loadFromCoreData()
             print("Internet connection FAILED")
         }
         
         
-
+        
         if self.revealViewController() != nil {
             menuBarButton.target = self.revealViewController()
             menuBarButton.action = #selector(SWRevealViewController.revealToggle(_:))
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
     }
-        
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
         let longTab = UILongPressGestureRecognizer(target: self, action: #selector(PhotosCollectionViewController.deleteAction(gestureReconizer:)))
         self.collectionView?.addGestureRecognizer(longTab)
-
+        
         let isUserLoggedIn = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
         let isImagesDownloaded = UserDefaults.standard.bool(forKey: "isImagesDownloaded")
         
@@ -71,12 +71,116 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
             
             //Если картинки не загружены, то загружаем
             if !isImagesDownloaded{
-                imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
-                UserDefaults.standard.set(true, forKey: "isImagesDownloaded")
-                UserDefaults.standard.synchronize()
+                
+                RequestManager.getPhoto(page: 0, token: mainUser.token!, success: { response in
+                    print(response)
+                    self.imageStruct = response
+                    self.saveAndDisplayImage()
+                })
+                
+//                //imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
+//                UserDefaults.standard.set(true, forKey: "isImagesDownloaded")
+//                UserDefaults.standard.set(true, forKey: "isImagesLoadedToCoreData")
+//                UserDefaults.standard.synchronize()
             }
             
         }
+    }
+    
+    //MARK: Image stuff
+    
+    //TODO: - ImageUpload, ImageDelete, SignIn, SignUp
+    
+    func saveAndDisplayImage(){
+    
+        for imageItem in imageStruct{
+            
+            RequestManager.downloadImage(imageURL: imageItem.url, success: { image in
+                
+                let filename = self.getDocumentsDirectory().appendingPathComponent("\(imageItem.id).png")
+                print(filename)
+                try? image.write(to: filename)
+                
+                let photoEntity = Photo(context: self.managedObjectContext!)
+                
+                
+                let date = Date(timeIntervalSince1970: TimeInterval(imageItem.date))
+                print("Date: \(date)")
+                photoEntity.date = date as NSDate
+                photoEntity.lat = imageItem.lat
+                photoEntity.lng = imageItem.lng
+                photoEntity.id = Int16(imageItem.id)
+                
+                do {
+                    try self.managedObjectContext?.save()
+                } catch  {
+                    print("Core Data Error: \(error)")
+                }
+                
+                DispatchQueue.main.async {
+                    self.collectionView?.reloadData()
+                }
+                
+            })
+        }
+        
+        //imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
+        UserDefaults.standard.set(true, forKey: "isImagesDownloaded")
+        UserDefaults.standard.set(true, forKey: "isImagesLoadedToCoreData")
+        UserDefaults.standard.synchronize()
+    }
+    
+    func saveImageAfterUploading(image: Data, imageData: ImageStruct){
+        
+        //Использовать этот путь для загрузки из кор даты
+        let filename = getDocumentsDirectory().appendingPathComponent("\(imageData.id).png")
+        print(filename)
+        try? image.write(to: filename)
+        
+        let photoEntity = Photo(context: managedObjectContext!)
+        
+        
+        let date = Date(timeIntervalSince1970: TimeInterval(imageData.date))
+        print("Date: \(date)")
+        photoEntity.date = date as NSDate
+        photoEntity.lat = imageData.lat
+        photoEntity.lng = imageData.lng
+        photoEntity.id = Int16(imageData.id)
+        
+        imageStruct.append(imageData)
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
+        
+        do {
+            try managedObjectContext?.save()
+        } catch  {
+            print("Core Data Error: \(error)")
+        }
+    }
+    
+    func deleteImage(){
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+        fetchRequest.includesPropertyValues = false
+        
+        do {
+            let items = try managedObjectContext?.fetch(fetchRequest) as! [NSManagedObject]
+            
+            managedObjectContext.delete(items[(indexPathToDelete?.row)!])
+            imageStruct.remove(at: (indexPathToDelete?.row)!)
+            
+            // Save Changes
+            try managedObjectContext?.save()
+            
+        } catch {
+            print(error)
+        }
+        
+        DispatchQueue.main.async {
+            self.collectionView?.reloadData()
+        }
+        
     }
     
     //MARK: CoreData
@@ -102,7 +206,7 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
         
     }
     
-    // MARK: DeleteImage
+    // MARK: DeleteImageAction
     
     func deleteAction(gestureReconizer: UILongPressGestureRecognizer){
         
@@ -114,7 +218,10 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
         let myAlert = UIAlertController(title: "Delete image.", message: "Do you want to delete this image?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         let okAction = UIAlertAction(title: "Delete", style: .default) { (UIAlertAction) in
-            self.imageGetter.deleteImage(imageURL: self.imageURL, token: self.mainUser.token!, id: id)
+            RequestManager.deleteImage(token: self.mainUser.token!, id: id, success: { 
+                self.deleteImage()
+            })
+            //self.imageGetter.deleteImage(imageURL: self.imageURL, token: self.mainUser.token!, id: id)
         }
         
         myAlert.addAction(okAction)
@@ -123,127 +230,15 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
         self.present(myAlert, animated: true, completion: nil)
     }
     
-    // MARK: ImageGetterDelegate
-    
-    func didUploadImage(imageData: ImageStruct) {
-        
-        //Криво. Будет работать только если картинки грузяться строго по очереди
-        if let data = images.last{
-            //Использовать этот путь для загрузки из кор даты
-            let filename = getDocumentsDirectory().appendingPathComponent("\(imageData.id).png")
-            print(filename)
-            try? data.write(to: filename)
-            
-            let photoEntity = Photo(context: managedObjectContext!)
-            
-            
-            let date = Date(timeIntervalSince1970: TimeInterval(imageData.date))
-            print("Date: \(date)")
-            photoEntity.date = date as NSDate
-            photoEntity.lat = imageData.lat
-            photoEntity.lng = imageData.lng
-            photoEntity.id = Int16(imageData.id)
-            
-            do {
-                try managedObjectContext?.save()
-            } catch  {
-                print("Core Data Error: \(error)")
-            }
-        }
-        
-        DispatchQueue.main.async {
-            self.collectionView?.reloadData()
-        }
-    }
-    
-    func didDeleteImage() {
-        //images.remove(at: (indexPathToDelete?.row)!)
-        
-        // Initialize Fetch Request
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
-        fetchRequest.includesPropertyValues = false
-        
-        do {
-            let items = try managedObjectContext?.fetch(fetchRequest) as! [NSManagedObject]
-            
-            managedObjectContext.delete(items[(indexPathToDelete?.row)!])
-            imageStruct.remove(at: (indexPathToDelete?.row)!)
-            
-            // Save Changes
-            try managedObjectContext?.save()
-            
-        } catch {
-            print(error)
-        }
-        
-        DispatchQueue.main.async {
-            self.collectionView?.reloadData()
-        }
-    }
-    
-    
-    //Это я сделал для загрузки с сервера, 
-    //а тепреь нужно добавить такое же и для добаволения с библеотеки
-    func didGetImage(image: Data, imageData: ImageStruct) {
-        imageStruct.append(imageData)
-        
-        let filename = getDocumentsDirectory().appendingPathComponent("\(imageData.id).png")
-        print(filename)
-        try? image.write(to: filename)
-        
-        let photoEntity = Photo(context: managedObjectContext!)
-        
-        
-        let date = Date(timeIntervalSince1970: TimeInterval(imageData.date))
-        print("Date: \(date)")
-        photoEntity.date = date as NSDate
-        photoEntity.lat = imageData.lat
-        photoEntity.lng = imageData.lng
-        photoEntity.id = Int16(imageData.id)
-        
-        do {
-            try managedObjectContext?.save()
-        } catch  {
-            print("Core Data Error: \(error)")
-        }
-        
-        DispatchQueue.main.async {
-            self.collectionView?.reloadData()
-        }
-    }
-    
-//    func didGetImage(image: Data) {
-//        images.append(image)
-//        
-//        
-//        DispatchQueue.main.async {
-//            self.collectionView?.reloadData()
-//        }
-//    }
-    
-//    func didGetImageData(imageData: [ImageStruct]) {
-//        
-//        imageStruct += imageData
-//        
-//        for imageItem in imageStruct{
-//            imageGetter.downloadImage(imageURL: imageItem.url)
-//        }
-//
-//        
-//        //TODO: Вот тут и нужно по идеи сохранять картинку в кор дату
-//        //можно сюда закинуть сохранения в кор дату
-//        //Или нет
-//        //Переписать didGetImage в модели:  в функция загрзки картинки  кидать еще и imageData 
-//        //и потом уже в делегате выводить
-//    }
-    
-    func didGetError(errorNumber: Int, errorDiscription: String) {
-        displayMyAlertMessage(title: "Ooops", message: "It's an error \(errorNumber) : \(errorDiscription)", called: self)
-    }
-    
     // MARK: IBActions
     
     @IBAction func addButton(_ sender: UIBarButtonItem) {
+        
+        if !Reachability.isConnectedToNetwork() {
+            displayMyAlertMessage(title: "Networking issue.", message: "You can not appload new images without the internet connection.", called: self)
+            return
+        }
+        
         guard CLLocationManager.locationServicesEnabled() else {
             displayMyAlertMessage(
                 title: "Please turn on location services",
@@ -278,7 +273,7 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let newLocation = locations.last
- 
+        
         location = newLocation
         
         locationManager.stopUpdatingLocation()
@@ -300,18 +295,17 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
     }
     
     // MARK: UICollectionViewDataSource
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //return images.count
         return imageStruct.count
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PhotosCollectionViewCell
-    
+        
         cell.imageStruct = imageStruct[indexPath.row]
         //cell.imageView.image = UIImage(data: images[indexPath.row])
-    
+        
         return cell
     }
     
@@ -323,38 +317,35 @@ class PhotosCollectionViewController: UICollectionViewController, ImageGetterDel
             }
         }
     }
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
     
-    }
-    */
-
+    // MARK: UICollectionViewDelegate
+    /*
+     // Uncomment this method to specify if the specified item should be highlighted during tracking
+     override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+     return true
+     }
+     */
+    
+    /*
+     // Uncomment this method to specify if the specified item should be selected
+     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+     return true
+     }
+     */
+    
+    /*
+     // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
+     override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
+     return false
+     }
+     override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
+     return false
+     }
+     override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
+     
+     }
+     */
+    
 }
 
 
@@ -420,7 +411,6 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate {
         //image = info[UIImagePickerControllerOriginalImage] as? UIImage
         image = info[UIImagePickerControllerEditedImage] as? UIImage
         
-        //т.к. image - опцоиональный тип
         if let theImage = image {
             
             var date = 100000
@@ -433,24 +423,15 @@ UIImagePickerControllerDelegate, UINavigationControllerDelegate {
                 lng = (location.coordinate.longitude)
             }
             
-            imageGetter.uploadImage(imageURL: imageURL, token: mainUser.token!, date: date, lat: Float(lat), lng: Float(lng), imageData: UIImagePNGRepresentation(theImage)!)
-            
-            //TODO: - Save image in CoreData
-            //images.append(UIImagePNGRepresentation(theImage)!)
-            
-            //Нужен специальный индекс для каждоый картинки, например ее ID
-            //значит нужно вызывать метож сохранения в кор дату толкьо тогда, когда картинка успешно загруена на сервер
-            
-//            if let data = UIImagePNGRepresentation(theImage){
-//                let filename = getDocumentsDirectory().appendingPathComponent("\(mainUser.userId!).png")
-//                try? data.write(to: filename)
-//            }
-            
+            RequestManager.uploadImage(token: mainUser.token!, date: date, lat: Float(lat), lng: Float(lng), imageData: UIImagePNGRepresentation(theImage)!, success: { (data, response) in
+                print("FROM VC: \(response)")
+                
+                self.saveImageAfterUploading(image: data, imageData: response)
+            })
+
             self.collectionView?.reloadData()
         }
-        
-        
-        
+
         dismiss(animated: true, completion: nil)
     }
     
