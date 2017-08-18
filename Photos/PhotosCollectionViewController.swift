@@ -32,6 +32,8 @@ class PhotosCollectionViewController: UICollectionViewController, CLLocationMana
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        UserDefaults.standard.set(false, forKey: "isUserLoggedIn")
+        UserDefaults.standard.synchronize()
         //UserDefaults.standard.setValue(false, forKey: "isImagesDownloaded")
         let isImagesDownloaded = UserDefaults.standard.bool(forKey: "isImagesDownloaded")
         managedObjectContext = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext
@@ -76,10 +78,10 @@ class PhotosCollectionViewController: UICollectionViewController, CLLocationMana
                     self.saveAndDisplayImage()
                 })
                 
-                //imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
-                UserDefaults.standard.set(true, forKey: "isImagesDownloaded")
-                UserDefaults.standard.set(true, forKey: "isImagesLoadedToCoreData")
-                UserDefaults.standard.synchronize()
+//                //imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
+//                UserDefaults.standard.set(true, forKey: "isImagesDownloaded")
+//                UserDefaults.standard.set(true, forKey: "isImagesLoadedToCoreData")
+//                UserDefaults.standard.synchronize()
             }
             
         }
@@ -121,6 +123,11 @@ class PhotosCollectionViewController: UICollectionViewController, CLLocationMana
                 
             })
         }
+        
+        //imageGetter.getImageData(url: imageURL, page: 0, token: mainUser.token!)
+        UserDefaults.standard.set(true, forKey: "isImagesDownloaded")
+        UserDefaults.standard.set(true, forKey: "isImagesLoadedToCoreData")
+        UserDefaults.standard.synchronize()
     }
     
     func saveImageAfterUploading(image: Data, imageData: ImageStruct){

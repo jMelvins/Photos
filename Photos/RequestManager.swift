@@ -17,26 +17,6 @@ let ApiMethodGetComment = "/image"
 
 let ReachabilityHost = "213.184.248.43:9099"
 
-// MARK: - Reachability
-let serverReachabilityManager: NetworkReachabilityManager? = {
-    let manager = NetworkReachabilityManager(host: ReachabilityHost)
-    manager?.startListening()
-    return manager
-}()
-let networkReachabilityManager: NetworkReachabilityManager? = {
-    let manager = NetworkReachabilityManager()
-    manager?.startListening()
-    return manager
-}()
-
-var isServerConnection : Bool {
-    return serverReachabilityManager?.isReachable ?? false
-}
-var isInternetConnection : Bool {
-    return networkReachabilityManager?.isReachable ?? false
-}
-
-
 final class RequestManager {
     
     private class func genericRequest(requestMethod: HTTPMethod,
@@ -45,15 +25,11 @@ final class RequestManager {
                                       headers: HTTPHeaders? = nil,
                                       encoding: ParameterEncoding,
                                       success: @escaping (_ responseData: DataResponse<Any>) -> Void = {_ in }){
-        if !isInternetConnection{
-            print("Network problems")
+        if !Reachability.isConnectedToNetwork(){
+            print("networking error")
             return
-            
         }
-//        if !isServerConnection {
-//            print("Server unavailable")
-//            return
-//        }
+        
         
         let urlString = ApiBaseUrl + method
         
@@ -106,6 +82,8 @@ final class RequestManager {
             success(image)
         })
     }
+    
+    //MARK: - Work with images
     
     class func downloadImage(imageURL: String, success: @escaping (_ image: Data) -> Void){
         
@@ -170,6 +148,46 @@ final class RequestManager {
             print(response)
             success()
         })
+    }
+    
+    //MARK: - Authorization stuff
+    
+    class func authorization(isSignIn: Bool,userName: String, userPassword: String, success: @escaping(_ user: User) -> Void){
+        
+        let headers : HTTPHeaders = [
+            "Content-Type" : "application/json",
+            "Accept" : "application/json"
+        ]
+        
+        let parameters: Parameters = [
+            "login": userName,
+            "password": userPassword
+        ]
+        
+        var ApiMethodAuth: String
+        if isSignIn{
+            ApiMethodAuth = ApiMethodSignIn
+        }
+        else{
+            ApiMethodAuth = ApiMethodSignUp
+        }
+        
+        genericRequest(requestMethod: .post, method: ApiMethodAuth, params: parameters, headers: headers, encoding: JSONEncoding(options: []), success: { response in
+            
+            guard let value = response.result.value else {
+                return
+            }
+            
+            var user: User
+            print(response.description)
+            let json = JSON(value)
+            let responseData = json["data"]
+            print(responseData)
+            user = DataParser.parseUser(data: responseData)
+            
+            success(user)
+        })
+        
     }
     
 }

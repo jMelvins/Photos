@@ -69,7 +69,21 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
         }
         statusLabel.text = "SignIn"
         
-        networkingStuff.authorization(url: signinURL, userName: loginTextField.text!, userPassword: passwordTextField.text!)
+        RequestManager.authorization(isSignIn: true, userName: loginTextField.text!, userPassword: passwordTextField.text!) { user in
+            let userLogin = user.login
+            let userId = user.userId
+            let userToken = user.token
+            
+            //Store data
+            UserDefaults.standard.set(userLogin, forKey: "userLogin")
+            UserDefaults.standard.set(userId, forKey: "userId")
+            UserDefaults.standard.set(userToken, forKey: "userToken")
+            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+            UserDefaults.standard.synchronize()
+            
+            self.dismiss(animated: true, completion: nil)
+        }
+        //networkingStuff.authorization(url: signinURL, userName: loginTextField.text!, userPassword: passwordTextField.text!)
     }
     
     func signUp(){
@@ -89,7 +103,21 @@ class AuthorizationViewController: UIViewController, CAAnimationDelegate, Networ
         
         statusLabel.text = "SignUp"
         
-        networkingStuff.authorization(url: signupURL, userName: loginTextField.text!, userPassword: passwordTextField.text!)
+        RequestManager.authorization(isSignIn: false, userName: loginTextField.text!, userPassword: passwordTextField.text!) { user in
+            let userLogin = user.login
+            let userId = user.userId
+            let userToken = user.token
+            
+            //Store data
+            UserDefaults.standard.set(userLogin, forKey: "userLogin")
+            UserDefaults.standard.set(userId, forKey: "userId")
+            UserDefaults.standard.set(userToken, forKey: "userToken")
+            UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+            UserDefaults.standard.synchronize()
+            
+            self.dismiss(animated: true, completion: nil)
+        }
+        //networkingStuff.authorization(url: signupURL, userName: loginTextField.text!, userPassword: passwordTextField.text!)
     }
     
     //MARK: Delegate

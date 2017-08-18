@@ -27,7 +27,6 @@ final class DataParser {
     }
     
     class func parseSingleImage(data: JSON) -> ImageStruct{
-        var image = [ImageStruct]()
         
         let id = data["id"].stringValue
         let url = data["url"].stringValue
@@ -37,6 +36,16 @@ final class DataParser {
         let imageItem = ImageStruct(id: Int(id)!, url: url, date: Int(date)!, lat: Float(lat)!, lng: Float(lng)!)
         
         return imageItem
+    }
+    
+    class func parseUser(data: JSON) -> User{
+        
+        let login = data["login"].stringValue
+        let userId = data["userId"].stringValue
+        let token = data["token"].stringValue
+        let user = User(login: login, userId: Int(userId), token: token)
+        
+        return user
     }
     
 }
